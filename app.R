@@ -469,7 +469,7 @@ server <- function(input, output, session) {
   
   selected_group <- reactive({
     if (!is.null(input$current_node_id$nodes[[1]])){
-      selected_group <- strsplit(input$current_node_id$nodes[[1]], ":", fixed = TRUE)[[1]][2]
+      gsub("cluster:", "", input$current_node_id$nodes[[1]], fixed = TRUE)
     }
   })
   
