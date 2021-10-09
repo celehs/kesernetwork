@@ -5,16 +5,16 @@ attr_edges:
         - target-other
     color.color:
         - '#FEF65C'
-        - rgba(128,128,128,1)
+        - '#808080'
     color.opa:
         - 1.0
         - 1.0
     color.highlight:
         - '#FEF326'
-        - rgba(205,104,57)
+        - '#CD6839'
     color.hover:
         - '#FEF326'
-        - rgba(205,104,57)
+        - '#CD6839'
     smooth:
         - no
         - yes
@@ -52,31 +52,31 @@ attr_nodes_cap:
         - VA Lab Group
     color.background:
         - '#82B9FD'
-        - rgba(152,248,152,1)
+        - '#98F898'
         - SeaGreen
-        - rgba(255,215,0,1)
-        - rgba(238,130,238,1)
+        - '#FFD700'
+        - '#EE82EE'
         - GreenYellow
     color.highlight.background:
         - '#82B9FD'
-        - rgba(152,248,152,1)
+        - '#98F898'
         - SeaGreen
-        - rgba(255,215,0,1)
-        - rgba(238,130,238,1)
+        - '#FFD700'
+        - '#EE82EE'
         - GreenYellow
     color.hover.background:
         - '#82B9FD'
-        - rgba(152,248,152,1)
+        - '#98F898'
         - SeaGreen
-        - rgba(255,215,0,1)
-        - rgba(238,130,238,1)
+        - '#FFD700'
+        - '#EE82EE'
         - GreenYellow
     color.border:
         - '#82B9FD'
-        - rgba(152,248,152,1)
+        - '#98F898'
         - SeaGreen
-        - rgba(255,215,0,1)
-        - rgba(238,130,238,1)
+        - '#FFD700'
+        - '#EE82EE'
         - GreenYellow
 
 # style of nodes(specified center nodes)
@@ -122,8 +122,8 @@ legend_edges:
             (selected)
     color:
         - '#FEF65C'
-        - rgba(128,128,128)
-        - rgba(205,104,57)
+        - '#808080'
+        - '#CD6839'
     width:
         - 3.0
         - 3.0
@@ -192,17 +192,17 @@ legend_groups:
         - '#FFD700'
         - '#EE82EE'
         - rgba(0,0,0,0)
-        - rgba(255,215,0,1)
-        - rgba(238,130,238,1)
+        - '#FFD700'
+        - '#EE82EE'
         - '#82B9FD'
-        - rgba(152,248,152,1)
+        - '#98F898'
         - SeaGreen
         - GreenYellow
         - rgba(0,0,0,0)
-        - rgba(255,215,0,1)
-        - rgba(238,130,238,1)
+        - '#FFD700'
+        - '#EE82EE'
         - '#82B9FD'
-        - rgba(152,248,152,1)
+        - '#98F898'
         - SeaGreen
         - GreenYellow
         - white
@@ -296,9 +296,9 @@ cap_color:
         - RXNORM
         - CCS
     color:
-        - rgba(152,248,152,1)
-        - rgba(255,215,0,1)
-        - rgba(238,130,238,1)
+        - '#98F898'
+        - '#FFD700'
+        - '#EE82EE'
         - '#82B9FD'
     index01:
         - Lab
