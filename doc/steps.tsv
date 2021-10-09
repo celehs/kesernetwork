@@ -1,0 +1,13 @@
+step	element	intro	position	title
+1	NA	Welcome to the KESER network app.	right	Welcome!
+2	#divselectmethod	Select a data set of Knowledge network construction method.	right	Step1
+3	#ui_table	Select some target nodes (green rows) as candidate nodes to display the network.	right	Step2
+4	#inCheckboxGroup2	Screening selected rows for candidate nodes.	right	Step3
+5	#div_checkbox	Setting:<br/>- Cluster nodes by groups.<br/>- Show/Hide the labels in the network.	right	Step4
+6	#goButton	Confirm submission.	right	Step5
+7	#network	Main page of the network.<br/>- Click/hover on a node to see the details.<br/>- Scroll to zoom in and out.<br/>- Legend's in the right box.	bottom-left_aligned	Network
+8	.sidebar-toggle	Collapse/expand the sidebar.	left	Collapse sidebar
+9	#controls	Controls of the network: <br/>- Set the layout of the network.<br/>- Selete a node to focus on.<br/>- Set the zoomlevel.<br/>- Set the height for network graph.	bottom	Controls
+10	#downloadData	Download the data of the candidate nodes.	bottom	Download
+11	#bookmark	Bookmark this application's state and get a URL for sharing.	bottom	Bookmark
+12	#instruct	Overview of the KESER App.	bottom	About
