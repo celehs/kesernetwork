@@ -1,0 +1,40 @@
+Package: kesernetwork
+Title: Visualization of the KESER Network
+Version: 0.0.0.9000
+Authors@R: person('PARSE', 'AUTHOR_LAST', email = 'AUTHOR@MAIL.COM', role = c('cre', 'aut'))
+Description: The kesernetwork builds a shiny app to visualize the knowledge networks for the code concepts. Using co-occurrence matrices of EHR codes from Veterans Affairs (VA) and Massachusetts General Brigham (MGB), the knowledge extraction via sparse embedding regression (KESER) algorithm was used to construct knowledge networks for the code concepts.
+License: GPL (>= 3)
+Imports: 
+    config (>= 0.3.1),
+    data.table,
+    dplyr,
+    DT,
+    ggplot2,
+    golem (>= 0.3.1),
+    htmltools,
+    Matrix,
+    plotly,
+    reactable,
+    rlang,
+    shinybrowser,
+    shinycssloaders,
+    shinydashboard,
+    shinydashboardPlus,
+    shinyhelper,
+    shinyWidgets,
+    stringr,
+    visNetwork,
+    yaml
+Encoding: UTF-8
+LazyData: true
+RoxygenNote: 7.1.1
+URL: https://github.com/celehs/kesernetwork.git
+BugReports: https://github.com/celehs/kesernetwork.git/issues
+Depends: R (>= 3.5.0), shinyBS, shiny, rintrojs,
+Suggests: 
+    rmarkdown,
+    knitr,
+    shinytest,
+    testthat (>= 3.0.0)
+VignetteBuilder: knitr
+Config/testthat/edition: 3

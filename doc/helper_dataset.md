@@ -1,1 +1,0 @@
-The network is inferred either based on the co-occurrence matrix from the single institution (VA only e.g.) or integrative analysis of co-occurrence matrices from both institutions (VA and MGB).

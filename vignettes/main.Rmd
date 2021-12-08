@@ -1,0 +1,33 @@
+---
+title: "Step-by-step"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Step-by-step}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+```{r, include = FALSE}
+library(htmltools)
+steps <- data.table::fread(system.file("app/doc/steps.tsv", package = "kesernetwork"))
+divs <- ""
+for(i in 1:nrow(steps)){
+  print(steps[i, 3])
+  divs <- div(divs, 
+    div(h3(steps$title[i]),
+        div(HTML(steps$intro[i])),
+        tags$img(src = paste0("screenshot_", i-1, ".png")))
+  )
+}
+
+```
+
+
+`r divs`

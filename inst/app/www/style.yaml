@@ -1,0 +1,307 @@
+# style of edges
+attr_edges:
+  edgetype:
+  - target-target
+  - target-other
+  color.color:
+  - '#FEF65C'
+  - rgba(128,128,128,1)
+  color.opa:
+  - 1.0
+  - 1.0
+  color.highlight:
+  - '#FEF326'
+  - rgba(205,104,57)
+  color.hover:
+  - '#FEF326'
+  - rgba(205,104,57)
+  smooth:
+  - no
+  - yes
+  hover:
+  - yes
+  - yes
+  width:
+  - 4.0
+  - 2.0
+  hoverWidth:
+  - 4.0
+  - 2.5
+  selectionWidth:
+  - 4.0
+  - 2.5
+  physics:
+  - no
+  - no
+
+# style of nodes(classified by Cap)
+attr_nodes_cap:
+  Cap:
+  - C
+  - L
+  - O
+  - P
+  - R
+  - S
+  Cap_label:
+  - CCS
+  - LOINC
+  - VA Lab Code
+  - PheCode
+  - RXNORM
+  - VA Lab Group
+  color.background:
+  - '#82B9FD'
+  - rgba(152,248,152,1)
+  - SeaGreen
+  - rgba(255,215,0,1)
+  - rgba(238,130,238,1)
+  - GreenYellow
+  color.highlight.background:
+  - '#82B9FD'
+  - rgba(152,248,152,1)
+  - SeaGreen
+  - rgba(255,215,0,1)
+  - rgba(238,130,238,1)
+  - GreenYellow
+  color.hover.background:
+  - '#82B9FD'
+  - rgba(152,248,152,1)
+  - SeaGreen
+  - rgba(255,215,0,1)
+  - rgba(238,130,238,1)
+  - GreenYellow
+  color.border:
+  - '#82B9FD'
+  - rgba(152,248,152,1)
+  - SeaGreen
+  - rgba(255,215,0,1)
+  - rgba(238,130,238,1)
+  - GreenYellow
+
+# style of nodes(specified center nodes)
+attr_nodes_type:
+  nodetype:
+  - target
+  - other
+  mass:
+  - 10.0
+  - 5.0
+  font.size:
+  - 30.0
+  - 22.0
+  size:
+  - 40.0
+  - 30.0
+  font.background:
+  - ''
+  - ''
+  borderWidth:
+  - 2.0
+  - 2.0
+  borderWidthSelected:
+  - 3.0
+  - 2.0
+  color.opa:
+  - 1.0
+  - 1.0
+  color.highlight.border:
+  - '#FF0000'
+  - '#FF0000'
+  color.hover.border:
+  - '#FF0000'
+  - '#FF0000'
+
+# style of legend of edges
+legend_edges:
+  label:
+  - target-target
+  - target-other
+  - |-
+    target-other
+    (selected)
+  color:
+  - '#FEF65C'
+  - rgba(128,128,128)
+  - rgba(205,104,57)
+  width:
+  - 3.0
+  - 3.0
+  - 3.0
+  physics:
+  - no
+  - no
+  - no
+  font.align:
+  - top
+  - top
+  - horizontal
+  font.size:
+  - 15.0
+  - 15.0
+  - 15.0
+  arrows:
+  - ''
+  - ''
+  - ''
+
+# style of legend of groups(nodes classified by Cap)
+legend_groups:
+  label:
+  - 'target nodes:'
+  - PheCode
+  - RXNORM
+  - 'other nodes:'
+  - PheCode
+  - RXNORM
+  - CCS
+  - LOINC
+  - VA Lab Code
+  - VA Lab Group
+  - 'Group:'
+  - PheCode
+  - RXNORM
+  - CCS
+  - LOINC
+  - VA Lab Code
+  - VA Lab Group
+  - 'Group:'
+  - 'Edges:'
+  shape:
+  - box
+  - ellipse
+  - ellipse
+  - box
+  - box
+  - box
+  - box
+  - box
+  - box
+  - box
+  - box
+  - database
+  - database
+  - database
+  - database
+  - database
+  - database
+  - database
+  - box
+  color:
+  - rgba(0,0,0,0)
+  - '#FFD700'
+  - '#EE82EE'
+  - rgba(0,0,0,0)
+  - rgba(255,215,0,1)
+  - rgba(238,130,238,1)
+  - '#82B9FD'
+  - rgba(152,248,152,1)
+  - SeaGreen
+  - GreenYellow
+  - rgba(0,0,0,0)
+  - rgba(255,215,0,1)
+  - rgba(238,130,238,1)
+  - '#82B9FD'
+  - rgba(152,248,152,1)
+  - SeaGreen
+  - GreenYellow
+  - white
+  - rgba(0,0,0,0)
+  physics:
+  - 'FALSE'
+  - 'FALSE'
+  - 'FALSE'
+  - 'FALSE'
+  - 'FALSE'
+  - 'FALSE'
+  - 'FALSE'
+  - 'FALSE'
+  - 'FALSE'
+  - 'FALSE'
+  - 'FALSE'
+  - 'FALSE'
+  - 'FALSE'
+  - 'FALSE'
+  - 'FALSE'
+  - 'FALSE'
+  - 'FALSE'
+  - 'FALSE'
+  - 'FALSE'
+  size:
+  - '10'
+  - .na.character
+  - .na.character
+  - '10'
+  - .na.character
+  - .na.character
+  - .na.character
+  - .na.character
+  - .na.character
+  - .na.character
+  - '10'
+  - .na.character
+  - .na.character
+  - .na.character
+  - .na.character
+  - .na.character
+  - .na.character
+  - .na.character
+  - '10'
+  font.color:
+  - white
+  - black
+  - black
+  - white
+  - black
+  - black
+  - black
+  - black
+  - black
+  - black
+  - white
+  - black
+  - black
+  - black
+  - black
+  - black
+  - black
+  - black
+  - white
+  font.size:
+  - 15.0
+  - 10.0
+  - 10.0
+  - 15.0
+  - 10.0
+  - 10.0
+  - 10.0
+  - 10.0
+  - 10.0
+  - 10.0
+  - 15.0
+  - 10.0
+  - 10.0
+  - 10.0
+  - 10.0
+  - 10.0
+  - 10.0
+  - 15.0
+  - 15.0
+
+# colors of sunburst/circularplot
+cap_color:
+  name:
+  - Lab
+  - PheCode
+  - RXNORM
+  - CCS
+  color:
+  - '#14E114'
+  - '#F3CE06'
+  - '#CD5ECD'
+  - '#82B9FD'
+  index01:
+  - Lab
+  - Disease
+  - Drug
+  - Procedure
