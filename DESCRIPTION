@@ -1,7 +1,11 @@
 Package: kesernetwork
 Title: Visualization of the KESER Network
 Version: 0.0.0.9000
-Authors@R: person('PARSE', 'AUTHOR_LAST', email = 'AUTHOR@MAIL.COM', role = c('cre', 'aut'))
+Authors@R: c(
+    person('Parse Health', email = 'contact@parse-health.org', role = c('cre', 'aut')),
+    person('VA CIPHER', role = c('aut')),
+    person('Verity Research', role = c('aut')),
+    person('CELEHS', role = c('aut')))
 Description: The kesernetwork builds a shiny app to visualize the knowledge networks for the code concepts. Using co-occurrence matrices of EHR codes from Veterans Affairs (VA) and Massachusetts General Brigham (MGB), the knowledge extraction via sparse embedding regression (KESER) algorithm was used to construct knowledge networks for the code concepts.
 License: GPL (>= 3)
 Imports: 
