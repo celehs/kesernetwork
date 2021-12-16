@@ -6,6 +6,8 @@
 inst/doc
 /doc/
 /Meta/
-/_tests/
 /data-raw/
 .Rhistory
+/_test/
+/shiny_bookmarks/
+/kesernetwrok.RData/
