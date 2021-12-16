@@ -2,6 +2,7 @@
 
 export(run_app)
 import(ggplot2)
+import(htmltools)
 import(rintrojs)
 import(shiny)
 import(shinyBS)
