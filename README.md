@@ -28,6 +28,17 @@ remotes::install_github("celehs/kesernetwork")
 
 ## Usage
 
+This is a basic example which shows you how to run the `kesernetwork`
+app. Remember you need to get access to the data and save it to your
+local computer. In order to guarantee some dependencies are loaded, you
+must use `library(kesernetwork)` beforehand, instead of directly running
+`kesernetwork::run_app()`.
+
+``` r
+library(kesernetwork)
+run_app(Rdata_path = "path/to/kesernetwork.RData")
+```
+
 See the [getting started
 guide](https://celehs.github.io/kesernetwork/articles/main.html) to
 learn how to use kesernetwork.
