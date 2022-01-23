@@ -108,7 +108,6 @@ plot_network <- function(s, cluster, draw.data, hide_label, CosMatrix, dict.comb
     df_edges = draw.data[[1]]
     df_nodes = draw.data[[2]]
     df_groups = draw.data[[3]]
-    print(nrow(df_edges))
     if(hide_label){
       df_nodes$label <- ""
       df_nodes$font.size[df_nodes$nodetype == "target"] <- 50
@@ -120,7 +119,6 @@ plot_network <- function(s, cluster, draw.data, hide_label, CosMatrix, dict.comb
     }
     
     legend_to_show <- c(5:10)[(attrs$legend_groups$label[5:10] %in% unique(df_nodes$Cap_label[!df_nodes$id %in% colnames(CosMatrix)]))]
-
     if(cluster){
       df_nodes$mass[1:length(root.node)]=40
       a = df_edges$length[df_edges$edgetype == "target-target"]

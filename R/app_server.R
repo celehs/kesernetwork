@@ -9,28 +9,22 @@
 app_server <- function(Rdata_path){
   
   server <- function(input, output, session) {
-    load(Rdata_path)
-    showNotification("Click 'Help' button to open step-by-step instructions.",
-                     duration = 3, type = "warning"
-    )
+    if(isTruthy(Rdata_path)){
+      load(Rdata_path)
+    }
     
-    steps = data.table::fread(app_sys("app/doc/steps.tsv"))
+    showNotification("Click 'Help' button to open step-by-step instructions.",
+                     duration = 3, type = "warning")
+    
+    controls <- reactive({
+      req(Rdata_path)
+      mod_header_server("headerBtn", input$sidebar, selected_nodes, draw.data(), dict.combine)()
+    })
+      
+
     attrs = yaml::yaml.load_file(app_sys("app/www/style.yaml"))
     
     attrs = lapply(attrs, as.data.frame)
-    
-    observeEvent(input$help, {
-      if (!input$sidebar) {
-        print("updateSidebar")
-        shinydashboardPlus::updateSidebar("sidebar", session = session)
-      }
-      rintrojs::introjs(session,
-              options = list(
-                steps = steps[, -1],
-                showBullets = FALSE
-              )
-      )
-    })
     
     shinyhelper::observe_helpers(help_dir = app_sys("app/doc"))
     
@@ -58,7 +52,8 @@ app_server <- function(Rdata_path){
     }, ignoreNULL = FALSE
     )
     
-    node_id <- reactive({ 
+    node_id <- reactive({
+      req(input$current_node_id)
       if (is.character(input$current_node_id$nodes[[1]])){
         if(strsplit(input$current_node_id$nodes[[1]], ":", fixed = TRUE)[[1]][1] == "cluster"){
           NULL
@@ -69,11 +64,11 @@ app_server <- function(Rdata_path){
       }
     })
     
-    CosMatrix <- reactive({ cos.list[[method()]] })
+    CosMatrix <- reactive({
+      req(Rdata_path)
+      cos.list[[method()]] 
+    })
     
-    interested <- colnames(cos.list[[1]])
-    
-    not_intereted <- reactive({ setdiff(rownames(CosMatrix()), interested) })
     
     ###############  DT input table   ############################################
     
@@ -93,9 +88,14 @@ app_server <- function(Rdata_path){
     })
     
     output$ui_table <- renderUI({
-      shinycssloaders::withSpinner(
-        DT::DTOutput("df_table")
-        ,type = 6)
+      if(isTruthy(Rdata_path)){
+        shinycssloaders::withSpinner(
+          DT::DTOutput("df_table")
+          ,type = 6)
+      } else {
+        h4("set 'Rdata_path' in run_app(Rdata_path = 'path to Rdata of kesernetwrok')")
+      }
+      
     })
     
     output$df_table <- DT::renderDT(DT::datatable({
@@ -150,10 +150,11 @@ app_server <- function(Rdata_path){
     ######################  network  #############################################
     
     output$network <- renderUI({
-      if (length(selected_nodes()) > 0) {
+      if (isTruthy(Rdata_path) & (length(selected_nodes()) > 0)) {
+        req(controls())
         shinycssloaders::withSpinner(
           visNetwork::visNetworkOutput("network_proxy_nodes",
-                           height = paste0(max(input$slider_h, (maxHeight()) - 65), "px")
+                           height = paste0(max(controls()$slider_h, (maxHeight()) - 65), "px")
           ),
           type = 6
         )
@@ -181,7 +182,7 @@ app_server <- function(Rdata_path){
     
     output$network_proxy_nodes <- visNetwork::renderVisNetwork({
       plot_network(selected_nodes(), cluster(), draw.data(), hide_labels(), 
-                   CosMatrix(), dict.combine, attrs, input$network_layout)
+                   CosMatrix(), dict.combine, attrs, controls()$layout)
     })
     
     ##################### info for clicked node   ################################
@@ -291,11 +292,6 @@ app_server <- function(Rdata_path){
       updateCheckboxCandidate(c(selected_nodes(), node_id()),
                               CosMatrix, session, dict.combine)
     })
-    
-    observeEvent(selected_nodes(), {
-      output$downloadData <- WriteData(selected_nodes(), draw.data())
-    })
-    
     
     #################  more info button  #########################################
     
@@ -409,35 +405,6 @@ app_server <- function(Rdata_path){
                  lapply(lab_info, function(x){ tags$li(x) })
                ), 
                height = maxHeight() - 450)
-    })
-    
-    
-    ############  controls for network  ##########################################
-    
-    observe({
-      if (length(selected_nodes()) != 0) {
-        x <- dict.combine$Description_s[match(
-          selected_nodes()[1:min(50, length(selected_nodes()))],
-          dict.combine$Variable
-        )]
-        x <- c("All", x)
-        updateSelectInput(session, "Focus", "Choose one node to focus on:",
-                          choices = x, selected = "All"
-        )
-      }
-    })
-    observe({
-      if (input$Focus != "All") {
-        id <- dict.combine$Variable[match(input$Focus, dict.combine$Description_s)]
-        visNetwork::visNetworkProxy("network_proxy_nodes") %>%
-          visNetwork::visFocus(id = id, scale = input$scale_id / 10)
-      } else {
-        visNetwork::visNetworkProxy("network_proxy_nodes")
-      }
-    })
-    
-    observeEvent(input$bookmark, {
-      session$doBookmark()
     })
   }
   return(server)

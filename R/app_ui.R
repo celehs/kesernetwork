@@ -14,69 +14,13 @@ app_ui <- function(request) {
     shinydashboardPlus::dashboardPage(
       shinydashboardPlus::dashboardHeader(
       title = "KESER Network",
-      leftUi = tagList(
-        # includeCSS("www/style.css"),
-        shinyWidgets::dropdownButton(
-          inputId = "controls",
-          label = "Controls",
-          icon = icon("cog"),
-          status = "primary",
-          circle = FALSE,
-          selectInput("network_layout", "The layout of network",
-            choices = c("layout_nicely", "layout_with_mds", "layout_with_lgl"), 
-            selected = "layout_nicely"
-          ) %>% 
-            shinyhelper::helper(type = "markdown",
-                   title = "The layout of network",
-                   content = "helper_layout",
-                   size = "m"),
-          selectInput("Focus",
-            label = "Choose one node to focus on:",
-            choices = "All", width = "100%"
-          ) %>% 
-            shinyhelper::helper(type = "markdown",
-                   title = "Focus on node",
-                   content = "helper_focuson",
-                   size = "s"),
-          sliderInput("scale_id", "Focus scale (zoomlevel):", width = "100%", 
-                      min = 1, max = 10, value = 5),
-          sliderInput("slider_h", "Graph height:",
-            min = 100, max = 1500, value = 750, width = "100%"
-          )
-        ),
-        downloadButton("downloadData",
-          " Download",
-          icon = icon("download"),
-          class = "btn btn-primary header-button",
-          width = "100px",
-          style = "padding: 6px;",
-          title = "The cosine similarity of current network."
-        ),
-        bookmarkButton(
-          label = "Bookmark", id = "bookmark",
-          class = "btn btn-primary header-button"
-        ),
-        actionButton("instruct", " About",
-          icon = icon("book"),
-          class = "btn btn-primary header-button",
-          width = "100px",
-          style = "padding: 6px 20px 6px 20px;",
-          title = "The introduction of the app."
-        ),
-        actionButton("help", " Help",
-          icon = icon("question"),
-          class = "btn btn-primary header-button",
-          width = "100px",
-          style = "padding: 6px 20px 6px 20px;",
-          title = "The introduction tour."
-        )
-      ),
+      leftUi = mod_header_ui("headerBtn"),
       titleWidth = "310pt",
       controlbarIcon = NULL
     ),
     shinydashboardPlus::dashboardSidebar(
       id = "sidebar",
-      collapsed = TRUE,
+      collapsed = FALSE,
       width = "310pt",
       minified = FALSE,
       rintrojs::introjsUI(),
@@ -218,9 +162,8 @@ app_ui <- function(request) {
       ),
       uiOutput("ui_selectedcluster"),
       shinyBS::bsModal(
-        id = "instruction", title = "Instruction", trigger = "instruct",
+        id = "instruction", title = "Instruction", trigger = "headerBtn-instruct",
         size = "large",
-        # includeMarkdown("doc/documentation.md")
         includeMarkdown(app_sys("app/doc/documentation.md"))
       )
     )

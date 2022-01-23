@@ -4,12 +4,16 @@
 #' @param ... arguments to pass to golem_opts. 
 #' See `?golem::get_golem_options` for more details.
 #' @inheritParams shiny::shinyApp
-#'
+#' @return A shiny application.
+#' @examples
+#' if (interactive()) {
+#'   run_app()
+#' }
 #' @export
 #' @importFrom shiny shinyApp
 #' @importFrom golem with_golem_options 
 run_app <- function(
-  Rdata_path,
+  Rdata_path = NULL,
   onStart = NULL,
   options = list(), 
   enableBookmarking = "server",

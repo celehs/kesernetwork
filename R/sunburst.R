@@ -109,8 +109,6 @@ sunburstPlot <- function(thr_cos,
       
       df = left_join(df, cap_color[, c(3,2)], by = c("parents2" = "index01"))
       df$color[is.na(df$color)] <- "white"
-      
-      print(nrow(df))
 
       m <- list(
         l = 0,r = 0,b = 0,t = 0,pad = 0
