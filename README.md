@@ -19,7 +19,13 @@ was used to construct knowledge networks for the code concepts.
 
 ## Installation
 
-Install development version from GitHub:
+Install the released version of kesernetwork from CRAN:
+
+``` r
+install.packages("kesernetwork")
+```
+
+Or install the development version from GitHub with:
 
 ``` r
 install.packages("remotes")

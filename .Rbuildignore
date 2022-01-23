@@ -15,3 +15,5 @@ $run_dev.*
 ^pkgdown$
 ^_tests$
 ^.*\.RData$
+^cran-comments.md$
+^CRAN-RELEASE$

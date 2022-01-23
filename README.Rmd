@@ -26,12 +26,20 @@ The kesernetwork builds a shiny app to visualize the knowledge networks for the 
 
 ## Installation
 
-Install development version from GitHub:
+Install the released version of kesernetwork from CRAN:
+
+``` r
+install.packages("kesernetwork")
+```
+
+Or install the development version from GitHub with:
 
 ``` r
 install.packages("remotes")
 remotes::install_github("celehs/kesernetwork")
 ```
+
+
 
 ## Usage
 
