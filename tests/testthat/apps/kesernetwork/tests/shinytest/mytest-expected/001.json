@@ -1,0 +1,97 @@
+{
+  "input": {
+    ".shinybrowser": {
+      "device": "Desktop",
+      "browser": {
+        "name": "Safari",
+        "version": "UNKNOWN"
+      },
+      "os": {
+        "name": "Linux",
+        "version": "UNKNOWN"
+      },
+      "dimensions": {
+        "width": 992,
+        "height": 744
+      },
+      "user_agent": "Mozilla/5.0 (Unknown; Linux x86_64) AppleWebKit/538.1 (KHTML, like Gecko) PhantomJS/2.1.1 Safari/538.1"
+    },
+    "changeline": 10,
+    "cluster": false,
+    "controls": 0,
+    "goButton": 0,
+    "headerBtn-bookmark": 0,
+    "headerBtn-Focus": "All",
+    "headerBtn-help": 0,
+    "headerBtn-instruct": 0,
+    "headerBtn-network_layout": "layout_nicely",
+    "headerBtn-scale_id": 5,
+    "headerBtn-slider_h": 750,
+    "hidden_tabs": "Circular plot",
+    "hide_labels": true,
+    "inCheckboxGroup2": [
+      "PheCode:008.5",
+      "PheCode:008.7",
+      "PheCode:008",
+      "PheCode:010",
+      "PheCode:031"
+    ],
+    "instruction": false,
+    "rotatelabel": "Radial",
+    "scale_sungh": 750,
+    "selectedcluster": false,
+    "selectednode": false,
+    "selectmethod": "VA_integrative"
+  },
+  "output": {
+    "network": {
+      "html": "<div align=\"center\" style=\"padding-top: 40px; &#10;                   font-size: 30px; &#10;                   color: white; &#10;                   height: 1000px;\">\n  <span>Try to click some rows in <\/span>\n  <i class=\"fa fa-table\" role=\"presentation\" aria-label=\"table icon\"><\/i>\n  <span> to specify your nodes<\/span>\n<\/div>",
+      "deps": [
+        {
+          "name": "font-awesome",
+          "version": "5.13.0",
+          "src": {
+            "href": "font-awesome-5.13.0"
+          },
+          "meta": null,
+          "script": null,
+          "stylesheet": [
+            "css/all.min.css",
+            "css/v4-shims.min.css"
+          ],
+          "head": null,
+          "attachment": null,
+          "all_files": true
+        }
+      ]
+    },
+    "ui_selectedcluster": {
+      "html": "<div class=\"modal sbs-modal fade\" id=\"selectedcluster\" tabindex=\"-1\" data-sbs-trigger=\"FALSE\">\n  <div class=\"modal-dialog modal-lg\">\n    <div class=\"modal-content\">\n      <div class=\"modal-header\">\n        <button type=\"button\" class=\"close\" data-dismiss=\"modal\">\n          <span>&times;<\/span>\n        <\/button>\n        <h4 class=\"modal-title\">Group:  <\/h4>\n      <\/div>\n      <div class=\"modal-body\">\n        <div id=\"clusterinfor\" class=\"shiny-html-output\"><\/div>\n      <\/div>\n      <div class=\"modal-footer\">\n        <button type=\"button\" class=\"btn btn-default\" data-dismiss=\"modal\">Close<\/button>\n      <\/div>\n    <\/div>\n  <\/div>\n<\/div>",
+      "deps": [
+        {
+          "name": "shinyBS",
+          "version": "0.61",
+          "src": {
+            "href": "sbs"
+          },
+          "meta": null,
+          "script": "shinyBS.js",
+          "stylesheet": "shinyBS.css",
+          "head": null,
+          "attachment": null,
+          "package": null,
+          "all_files": true
+        }
+      ]
+    },
+    "ui_table": {
+      "html": "<h4>set 'Rdata_path' in run_app(Rdata_path = 'path to Rdata of kesernetwrok')<\/h4>",
+      "deps": [
+
+      ]
+    }
+  },
+  "export": {
+
+  }
+}
