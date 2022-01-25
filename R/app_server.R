@@ -31,7 +31,7 @@ app_server <- function(Rdata_path){
     
     ####################  input   #################################################
     
-    maxHeight <- reactive({shinybrowser::get_height()})
+    winsize <- windowSizeServer("win")
     
     method <- reactive({ input$selectmethod })
     
@@ -152,9 +152,10 @@ app_server <- function(Rdata_path){
     output$network <- renderUI({
       if (isTruthy(Rdata_path) & (length(selected_nodes()) > 0)) {
         req(controls())
+        req(winsize()[2])
         shinycssloaders::withSpinner(
           visNetwork::visNetworkOutput("network_proxy_nodes",
-                           height = paste0(max(controls()$slider_h, (maxHeight()) - 65), "px")
+                           height = paste0(winsize()[2] - 65, "px")
           ),
           type = 6
         )
@@ -365,7 +366,7 @@ app_server <- function(Rdata_path){
         df_drugs()
       },
       groupBy = "Code",
-      pagination = FALSE, height = maxHeight() - 450, rownames = FALSE
+      pagination = FALSE, height = winsize()[2] - 450, rownames = FALSE
       )
     })
     
@@ -404,7 +405,7 @@ app_server <- function(Rdata_path){
                info = tags$ul(
                  lapply(lab_info, function(x){ tags$li(x) })
                ), 
-               height = maxHeight() - 450)
+               height = winsize()[2] - 450)
     })
   }
   return(server)

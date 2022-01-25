@@ -127,9 +127,4 @@ mod_header_server <- function(id, sidebar_close, selected_nodes, draw.data, dict
  
   })
 }
-    
-## To be copied in the UI
-# mod_name_of_module1_ui("name_of_module1_ui_1")
-    
-## To be copied in the server
-# mod_name_of_module1_server("name_of_module1_ui_1")
+

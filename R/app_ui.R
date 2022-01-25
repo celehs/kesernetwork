@@ -95,7 +95,7 @@ app_ui <- function(request) {
       )
     ),
     shinydashboard::dashboardBody(
-      shinybrowser::detect(),
+      windowSizeUI("win"),
       uiOutput("network"),
       shinyBS::bsModal(
         id = "selectednode", title = "Node infomation", trigger = FALSE,
