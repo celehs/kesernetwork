@@ -8,13 +8,7 @@ navbar:
     - icon: "fa-home"
       href: index.html  
     - text: "Get started"
-      href: articles/main.html
-    - text: "Articles"
-      menu:
-      - text: "Network"
-        href: articles/network.html  
-      - text: "Troubleshooting"
-        href: articles/trouble.html   
+      href: articles/getstarted.html
     - text: "Reference"
       href: reference/index.html
   right:
@@ -25,9 +19,3 @@ reference:
 - title: Run the app
   contents:
   - run_app
-
-# - title: Dataset
-#   contents:
-#   - df1
-#   - df2
-
