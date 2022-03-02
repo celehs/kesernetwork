@@ -37,11 +37,14 @@ The maximum number of target nodes (as input) is set to 50. For clarity of the n
 
 <hr>
 
-[1]: https://doi.org/10.1101/2021.03.13.21253486
+[1]: https://doi.org/10.1038/s41746-021-00519-z
 
 [2]: https://celehs.github.io/KESER/
 
-[1] Chuan Hong, Everett Rush, Molei Liu, Doudou Zhou, Jiehuan Sun, Aaron Sonabend, et al. Clinical Knowledge Extraction via Sparse Embedding Regression (KESER) with Multi-Center Large Scale Electronic Health Record Data. medRxiv 2021.03.13.21253486; doi: https://doi.org/10.1101/2021.03.13.21253486
+[1] Hong, C., Rush, E., Liu, M. et al. Clinical knowledge extraction via
+    sparse embedding regression (KESER) with multi-center large scale
+    electronic health record data. npj Digit. Med. 4, 151 (2021).
+    <https://doi.org/10.1038/s41746-021-00519-z>
 
 [2] https://celehs.github.io/KESER/
 

@@ -1,6 +1,12 @@
+## Resubmission
+
+This is a resubmission. In this version I have:
+
+* Added some details in DESCRIPTION.
+
 ## R CMD check results
 
-There were no ERRORs, WARNINGs or NOTEs 
+0 errors ✓ | 0 warnings ✓ | 0 notes ✓
 
 ## Downstream dependencies
 

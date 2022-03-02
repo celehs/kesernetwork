@@ -13,7 +13,8 @@ circularPreData <- function(data){
   colnames(to_add) = colnames(data)
   to_add$group=rep(levels(data$group), each=empty_bar)
   data=rbind(data, to_add)
-  data=dplyr::arrange_(data, "group")
+  # data=dplyr::arrange(data, "group")
+  data=data %>% dplyr::arrange(.data$group)
   data$id=seq(1, nrow(data))
   
   # Get the name and the y position of each label
