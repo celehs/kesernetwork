@@ -66,6 +66,7 @@ app_server <- function(Rdata_path){
     
     CosMatrix <- reactive({
       req(Rdata_path)
+      print(dim(cos.list[[method()]]))
       cos.list[[method()]] 
     })
     
