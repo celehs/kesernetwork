@@ -48,7 +48,14 @@
   color: white;
 }
 
+#df_table > #DataTables_Table_0_wrapper > .dt-buttons > .dt-button .buttons-select-none .disabled{
+	color: black;
+}
+
 /*To change text and background color of the `Search` box */
+.dataTables_wrapper .dataTables_filter input{
+  background-color: #F4F2F2;
+}
 .dataTables_filter input {
         color: black;
         background-color: #F4F2F2;

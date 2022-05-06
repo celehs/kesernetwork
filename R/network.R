@@ -109,11 +109,11 @@ plot_network <- function(s, cluster, draw.data, hide_label, CosMatrix, dict.comb
     df_nodes = draw.data[[2]]
     df_groups = draw.data[[3]]
     if(hide_label){
-      df_nodes$label <- ""
+      df_nodes$label <- "        "
       df_nodes$font.size[df_nodes$nodetype == "target"] <- 50
       df_nodes$font.size[df_nodes$nodetype == "other"] <- 30
       df_nodes$font.background <- NA
-      df_nodes$label[df_nodes$shape == "box"] <- "        "
+      # df_nodes$label[df_nodes$shape == "box"] <- "        "
       attrs$legend_groups$size[1:7] <- 10
       attrs$legend_groups$borderWidth <- 1
     }
