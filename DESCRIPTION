@@ -16,6 +16,7 @@ Imports:
     DT,
     ggplot2,
     golem (>= 0.3.1),
+    Matrix,
     plotly,
     reactable, 
     rintrojs,
