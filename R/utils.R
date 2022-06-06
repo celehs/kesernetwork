@@ -27,15 +27,13 @@ clickedNodeText <- function(node_id, dict.combine){
 updateCheckboxCandidate <- function(x, CosMatrix, session, dict.combine){
   if (length(x) != 0) {
     x.name <- dict.combine$Description[match(x, dict.combine$Variable)]
-    x.neighbor <- sapply(x, function(xx) length(getNeighbors(xx, CosMatrix())))
-    x.neighbor <- paste0(x.name, " (", x.neighbor, " neighbors)")
   } else {
-    x <- x.name <- x.neighbor <- character(0)
+    x <- x.name <- character(0)
   }
   updateCheckboxGroupInput(session, "inCheckboxGroup2",
-                           label = paste(length(x), " nodes selected:"),
+                           label = paste(length(x), "node(s) selected:"),
                            choiceValues = x,
-                           choiceNames = x.neighbor,
+                           choiceNames = paste0(x,": ",x.name),
                            selected = x
   )
 }

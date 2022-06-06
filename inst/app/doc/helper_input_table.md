@@ -6,10 +6,6 @@ The selected rows will appear as candidate nodes at the bottom of the table. Pay
 
 Enter keywords, the form will be searched. Then click on the desired rows.
 
-#### 'Deselect all' button
-
-Clear all selected rows.
-
 #### Order
 
 Click the header to sort the table.

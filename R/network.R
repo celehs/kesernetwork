@@ -12,12 +12,17 @@ dataNetwork <- function(selected_nodes, CosMatrix, dict.combine, attrs){
     cor = switch((i %in% colnames(CosMatrix)) + 1, 
                  CosMatrix[i, to, drop = TRUE], 
                  CosMatrix[to, i, drop = TRUE])
+    if(length(to) == 0){
+      to = i
+      cor = 1
+    }
     df_edges <- rbind(df_edges, data.frame("from" = i,
                                            "to" = to,
                                            "corvalue" = cor))
   }
   
-  df_edges <- df_edges[df_edges$from != df_edges$to, ]
+  if(!is.null(df_edges)){
+    # df_edges <- df_edges[df_edges$from != df_edges$to, ]
 
   df_edges$ends <- paste0(df_edges$from, ";",df_edges$to)
   df_edges$ends <- sapply(df_edges$ends, function(x){
@@ -72,6 +77,13 @@ dataNetwork <- function(selected_nodes, CosMatrix, dict.combine, attrs){
   df_groups <- df_groups[!duplicated(df_groups),]
 
   return(list(df_edges, df_nodes, df_groups))
+  } else {
+    return(list(data.frame(), data.frame(), data.frame()))
+  }
+  
+  
+
+  
 }
 
 
@@ -101,13 +113,14 @@ add_attr_network <- function(p, layout = "layout_nicely"){
 }
 
 
-plot_network <- function(s, cluster, draw.data, hide_label, CosMatrix, dict.combine, attrs, layout, gravitationalConstant){
+plot_network <- function(s, draw.data, hide_label, CosMatrix, dict.combine, attrs, layout, gravitationalConstant){
 
   selected_nodes = s[1:min(50,length(s))]
     root.node = match(selected_nodes, rownames(CosMatrix))
     df_edges = draw.data[[1]]
     df_nodes = draw.data[[2]]
     df_groups = draw.data[[3]]
+    if(nrow(df_edges) > 0){
     if(hide_label){
       df_nodes$label <- "        "
       df_nodes$font.size[df_nodes$nodetype == "target"] <- 50
@@ -119,35 +132,41 @@ plot_network <- function(s, cluster, draw.data, hide_label, CosMatrix, dict.comb
     }
     
     legend_to_show <- c(5:10)[(attrs$legend_groups$label[5:10] %in% unique(df_nodes$Cap_label[!df_nodes$id %in% colnames(CosMatrix)]))]
-    if(cluster){
-      df_nodes$mass[1:length(root.node)]=40
-      a = df_edges$length[df_edges$edgetype == "target-target"]
-      df_edges$length[df_edges$edgetype == "target-target"] = sapply(a, function(x){max(x,300*min(10,length(root.node)))})
-      p <- visNetwork::visNetwork(df_nodes, df_edges, width = "100%",height = "100%") %>%
-        visNetwork::visLegend(width = 0.09, position = "right",
-                  addNodes = attrs$legend_groups[c(1:4, legend_to_show, 18, 19), ],
-                  addEdges = attrs$legend_edges,
-                  useGroups = FALSE, zoom = TRUE,
-                  stepX = 150, stepY = 75,ncol=1) %>%
-        visNetwork::visClusteringByGroup(groups = df_groups$group,
-                             label = "Group:\n",
-                             scale_size = TRUE,
-                             shape = "database",
-                             color = df_groups$color.background,
-                             force = TRUE)
-      add_attr_network(p)
-    }else{
-      p <- visNetwork::visNetwork(df_nodes, df_edges, width = "100%",height = "100%") %>%
-        visNetwork::visLegend(addNodes = attrs$legend_groups[c(1:4, legend_to_show, 19),],
-                  addEdges = attrs$legend_edges,
-                  width = 0.09,
-                  position = "right",
-                  useGroups = FALSE,
-                  zoom = TRUE,
-                  stepX = 150,
-                  stepY = 70,
-                  ncol=1)
-      add_attr_network(p, layout)
+      # if(cluster){
+      #   df_nodes$mass[1:length(root.node)]=40
+      #   a = df_edges$length[df_edges$edgetype == "target-target"]
+      #   df_edges$length[df_edges$edgetype == "target-target"] = sapply(a, function(x){max(x,300*min(10,length(root.node)))})
+      #   p <- visNetwork::visNetwork(df_nodes, df_edges, width = "100%",height = "100%") %>%
+      #     visNetwork::visLegend(width = 0.09, position = "right",
+      #                           addNodes = attrs$legend_groups[c(1:4, legend_to_show, 18, 19), ],
+      #                           addEdges = attrs$legend_edges,
+      #                           useGroups = FALSE, zoom = TRUE,
+      #                           stepX = 150, stepY = 75,ncol=1) %>%
+      #     visNetwork::visClusteringByGroup(groups = df_groups$group,
+      #                                      label = "Group:\n",
+      #                                      scale_size = TRUE,
+      #                                      shape = "database",
+      #                                      color = df_groups$color.background,
+      #                                      force = TRUE)
+      #   add_attr_network(p)
+      # }else{
+        p <- visNetwork::visNetwork(df_nodes, df_edges, width = "100%",height = "100%") %>%
+          visNetwork::visLegend(addNodes = attrs$legend_groups[c(1:4, legend_to_show, 19),],
+                                addEdges = attrs$legend_edges,
+                                width = 0.09,
+                                position = "right",
+                                useGroups = FALSE,
+                                zoom = TRUE,
+                                stepX = 150,
+                                stepY = 70,
+                                ncol=1)
+        add_attr_network(p, layout)
+      # }
+    } else {
+      print("0 nodes collected")
+      visNetwork::visNetwork(data.frame(), data.frame(), width = "100%",
+                 main = paste("0 nodes collected"))
+      
     }
 
 }

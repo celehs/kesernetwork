@@ -2,6 +2,7 @@
 #' 
 #' @param input,output,session Internal parameters for {shiny}. 
 #'     DO NOT REMOVE.
+#' @import rintrojs
 #' @import shiny
 #' @import shinyBS
 #' @import rintrojs
@@ -38,9 +39,12 @@ app_server <- function(Rdata_path){
     selected_rows <- reactive({df_input()$nodeID[input$df_table_rows_selected]})
     
     selected_nodes <- eventReactive(input$goButton, {
-      input$inCheckboxGroup2
-    }, ignoreNULL = FALSE
-    )
+      if(input$goButton == 0 & !isTruthy(input$inCheckboxGroup2)){
+        rownames(cos.list[[1]])[grepl("PheCode", rownames(cos.list[[1]]))][1:5]
+      } else {
+        input$inCheckboxGroup2
+      }
+    }, ignoreNULL = FALSE)
     
     cluster <- eventReactive(input$goButton, {
       input$cluster
@@ -102,18 +106,20 @@ app_server <- function(Rdata_path){
     output$df_table <- DT::renderDT(DT::datatable({
       df_input()[, c(1:2, 5)]
     }, rownames = FALSE,
-    extensions = c("Buttons", "Select"),
+    # extensions = c("Buttons", "Select"),
     options = list(
       paging = FALSE,
       scrollY = "300px",
       scrollCollapse = TRUE,
-      dom = "Bfrtip",
-      select = list(
-        style = "multiple", items = "row"
-      ),
-      buttons = list("selectNone")
+      dom = "Bfrtip"
+      # select = list(
+      #   style = "multiple", items = "row",
+      # ),
+      # buttons = list("selectNone")
     ),
-    selection = "none",
+    selection = list(mode = 'multiple', 
+                     selected = 1:5, 
+                     target = 'row'),
     escape = FALSE
     ) %>%
       DT::formatStyle(
@@ -123,13 +129,13 @@ app_server <- function(Rdata_path){
         'istarget',
         target = 'row',
         backgroundColor = DT::styleEqual(c('target', "others"), c('#D5F5E3', 'lightgray'))
-      ), server = FALSE)
+      ), server = TRUE)
     
     ##############  sidebar ######################################################
     
-    observeEvent(selected_rows(), {
-      updateCheckboxCandidate(selected_rows(), CosMatrix, session, dict.combine)
-    })
+    # observeEvent(selected_rows(), {
+    #   checkboxUpdateBySelectedRows(selected_rows(), CosMatrix, session, dict.combine)
+    # })
     
     
     observeEvent(input$inCheckboxGroup2, {
@@ -183,7 +189,7 @@ app_server <- function(Rdata_path){
     })
     
     output$network_proxy_nodes <- visNetwork::renderVisNetwork({
-      plot_network(selected_nodes(), cluster(), draw.data(), hide_labels(), 
+      plot_network(selected_nodes(), draw.data(), hide_labels(), 
                    CosMatrix(), dict.combine, attrs, controls()$layout)
     })
     
@@ -295,6 +301,74 @@ app_server <- function(Rdata_path){
                               CosMatrix, session, dict.combine)
     })
     
+    ## Update checkboxinput based on selected rows in table==============
+    checkboxUpdateBySelectedRows <- function(inputid, rows, input_table, session){
+      if(!isTruthy(rows)){
+        x <- character(0)
+        updateCheckboxGroupInput(session, inputid,
+                                 "0 node(s) selected:",
+                                 choices = x,
+                                 selected = x)
+      }
+      if(length(rows)!=0){
+        x = input_table$nodeID[rows]
+        x.name = input_table$Description[rows]
+        print(x)
+        print(x.name)
+        print(inputid)
+        updateCheckboxGroupInput(session, inputid,
+                                 label = paste(length(x), "node(s) selected:"),
+                                 choiceValues = x,
+                                 choiceNames = paste0(x,": ",x.name),
+                                 selected = x
+        )
+      }
+    }
+    observe({
+      checkboxUpdateBySelectedRows("inCheckboxGroup2", 
+                                   input$df_table_rows_selected, 
+                                   df_input(), session)
+    })
+    
+    observeEvent(input$deselect, {
+      print("input$deselect")
+      
+      DT::reloadData(
+        proxy,
+        resetPaging = TRUE,
+        clearSelection = c("all"))
+      
+      x <- character(0)
+      updateCheckboxGroupInput(session, "check_nodes",
+                               "0 node(s) selected",
+                               choices = x,
+                               selected = x)
+      
+    })
+    
+    proxy <- DT::dataTableProxy('df_table')
+    
+    observeEvent(input$selectmethod, {
+      print("input$selectmethod")
+      
+      DT::reloadData(
+        proxy,
+        resetPaging = TRUE,
+        clearSelection = c("all"))
+      
+      x <- character(0)
+      updateCheckboxGroupInput(session, "check_nodes",
+                               "0 node(s) selected",
+                               choices = x,
+                               selected = x)
+      
+    })
+    
+    observeEvent(selected_nodes(), {
+      output$downloadData <- WriteData(selected_nodes(), draw.data())
+    })
+    
+    
     #################  more info button  #########################################
     
     observeEvent(node_id(), {
@@ -320,7 +394,7 @@ app_server <- function(Rdata_path){
     observeEvent(node_id(), {
       if (node_id() %in% phecode$Phecode) {
         phe_id <- gsub(".+:", "", node_id(), perl = TRUE)
-        href <- paste0("http://app.parse-health.org/phecode-map/?phecode=", phe_id)
+        href <- paste0("https://hmsrsc.aws.hms.harvard.edu/content/89/?phecode=", phe_id)
         output$tophecodemap <- renderUI({
           actionButton(
             inputId = "tomap", class = "btn-primary", width = "157px",

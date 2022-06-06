@@ -15,12 +15,10 @@
 
 
 .dataTables_wrapper .dataTables_length,
- .dataTables_wrapper .dataTables_filter,
-  .dataTables_wrapper .dataTables_info,
-   .dataTables_wrapper .dataTables_processing,
-    .dataTables_wrapper .dataTables_paginate,
-     .dataTables_wrapper .dataTables_paginate .paginate_button.current:hover {
-        color: #ffffff;
+ .dataTables_wrapper .dataTables_processing,
+  .dataTables_wrapper .dataTables_paginate,
+   .dataTables_wrapper .dataTables_paginate .paginate_button.current:hover {
+      color: #ffffff;
 }
 
 /*### DT for dark theme ###*/
@@ -41,28 +39,14 @@
        color: #0E334A;
        background-color: #0E334A
        }
-#DataTables_Table_0_filter > label{
+.dataTables_filter > label, .dataTables_wrapper > div[id*="info"]{
   color: white;
-}
-#DataTables_Table_0_info {
-  color: white;
-}
-
-/*
-#df_table > #DataTables_Table_0_wrapper > .dt-buttons > .dt-button .buttons-select-none .disabled{
-	color: black;
-	background-color: white;
-}
-*/
-
-button.buttons-select-none{
-	color: black;
-	background-color: white;
 }
 
 /*To change text and background color of the `Search` box */
 .dataTables_filter input {
-        color: white;
+        color: black;
+        background-color: #F4F2F2;
        }
 thead {
   color: #ffffff;
@@ -118,12 +102,20 @@ tbody {
  margin-top: 20px;
 }
 
+div#inCheckboxGroup2{
+  width: 100%;
+}
 
+
+/* body */
 .content{
   padding-top: 0;
   background-color: #222d32;
 }
 
+.content-wrapper{
+  background-color: #222d32;
+}
 
 #network_proxy_nodes > hr{
   background-color: #222d32;
@@ -176,11 +168,11 @@ section.sidebar .shiny-input-container {
              top: 50px;
              left: 698pt;
              }
-             
+/*             
 button#goButton {
     margin-top: 20px;
 }
-
+*/
 
 .modal-content{
   padding-left: 20px;

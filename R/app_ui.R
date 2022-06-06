@@ -51,38 +51,38 @@ app_ui <- function(request) {
                style = "margin-right: 5px;"),
       uiOutput("ui_table"),
       div(
-        checkboxGroupInput("inCheckboxGroup2", "5 nodes selected:",
-          choiceValues = c("PheCode:008.5", "PheCode:008.7", "PheCode:008",
-                           "PheCode:010", "PheCode:031"),
-          choiceNames = c(
-            "bacterial enteritis (196 neighbors)",
-            "intestinal infection due to protozoa (39 neighbors)",
-            "intestinal infection (81 neighbors)",
-            "tuberculosis (121 neighbors)",
-            "diseases due to other mycobacteria (142 neighbors)"
-          ),
-          selected = c("PheCode:008.5", "PheCode:008.7", "PheCode:008", 
-                       "PheCode:010", "PheCode:031"),
-          width = "100%"
-        ),
+        checkboxGroupInput("inCheckboxGroup2", "0 node(s) Selected:"),
+        # checkboxGroupInput("inCheckboxGroup2", "5 nodes selected:",
+        #   choiceValues = c("PheCode:008.5", "PheCode:008.6", "PheCode:008.7",
+        #                    "PheCode:010", "PheCode:031"),
+        #   choiceNames = c(
+        #     "bacterial enteritis (196 neighbors)",
+        #     "intestinal infection (81 neighbors)",
+        #     "intestinal infection due to protozoa (39 neighbors)",
+        #     "tuberculosis (121 neighbors)",
+        #     "diseases due to other mycobacteria (142 neighbors)"
+        #   ),
+        #   selected = c("PheCode:008.5", "PheCode:008.7", "PheCode:008", 
+        #                "PheCode:010", "PheCode:031"),
+        #   width = "100%"
+        # ),
         id = "divcheckboxgroups"
       ),
-      fluidRow(
-        column(
-          6,
           div(
-            checkboxInput("cluster", "Cluster by groups", value = FALSE) %>% 
-              shinyhelper::helper(type = "markdown",
-                     colour = "white",
-                     title = "Cluster by groups",
-                     content = "helper_clustergroup",
-                     size = "m"),
             checkboxInput("hide_labels", "Hide the labels", value = TRUE),
             id = "div_checkbox"
-          )
-        ),
-        column(
-          6,
+          ),
+      # buttons ====
+      fluidRow(
+        column(6,
+               div(
+                 actionButton(
+                   inputId = "deselect",
+                   label = "Deselect", 
+                   icon = icon("undo"),
+                   color = "lightgrey"
+                 ), align = "center")),
+        column(6,
           div(actionButton("goButton", "Show network",
             width = "150px",
             icon = tags$i(
@@ -90,7 +90,7 @@ app_ui <- function(request) {
               style = "font-size: 10px"
             ),
             class = "btn-success"
-          ), align = "center")
+          ), align = "left")
         )
       )
     ),
@@ -168,6 +168,7 @@ app_ui <- function(request) {
       )
     )
   ),#end dashboardPage
+  # footer ====
   tags$footer(div(
     "Teams:",
     tags$a(href = "https://www.va.gov/", target = "_blank",
