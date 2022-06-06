@@ -51,21 +51,21 @@ app_ui <- function(request) {
                style = "margin-right: 5px;"),
       uiOutput("ui_table"),
       div(
-        checkboxGroupInput("inCheckboxGroup2", "0 node(s) Selected:"),
-        # checkboxGroupInput("inCheckboxGroup2", "5 nodes selected:",
-        #   choiceValues = c("PheCode:008.5", "PheCode:008.6", "PheCode:008.7",
-        #                    "PheCode:010", "PheCode:031"),
-        #   choiceNames = c(
-        #     "bacterial enteritis (196 neighbors)",
-        #     "intestinal infection (81 neighbors)",
-        #     "intestinal infection due to protozoa (39 neighbors)",
-        #     "tuberculosis (121 neighbors)",
-        #     "diseases due to other mycobacteria (142 neighbors)"
-        #   ),
-        #   selected = c("PheCode:008.5", "PheCode:008.7", "PheCode:008", 
-        #                "PheCode:010", "PheCode:031"),
-        #   width = "100%"
-        # ),
+        # checkboxGroupInput("inCheckboxGroup2", "0 node(s) Selected:"),
+        checkboxGroupInput("inCheckboxGroup2", "5 nodes selected:",
+          choiceValues = c("PheCode:008.5", "PheCode:008.6", "PheCode:008.7",
+                           "PheCode:010", "PheCode:031"),
+          choiceNames = c(
+            "PheCode:008.5: bacterial enteritis",
+            "PheCode:008.6: viral enteritis",
+            "PheCode:008.7: intestinal infection due to protozoa",
+            "PheCode:010: tuberculosis",
+            "PheCode:031: diseases due to other mycobacteria"
+          ),
+          selected = c("PheCode:008.5", "PheCode:008.6", "PheCode:008.7",
+                       "PheCode:010", "PheCode:031"),
+          width = "100%"
+        ),
         id = "divcheckboxgroups"
       ),
           div(

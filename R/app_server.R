@@ -39,11 +39,11 @@ app_server <- function(Rdata_path){
     selected_rows <- reactive({df_input()$nodeID[input$df_table_rows_selected]})
     
     selected_nodes <- eventReactive(input$goButton, {
-      if(input$goButton == 0 & !isTruthy(input$inCheckboxGroup2)){
-        rownames(cos.list[[1]])[grepl("PheCode", rownames(cos.list[[1]]))][1:5]
-      } else {
+      # if(input$goButton == 0 & !isTruthy(input$inCheckboxGroup2)){
+        # rownames(cos.list[[1]])[grepl("PheCode", rownames(cos.list[[1]]))][1:5]
+      # } else {
         input$inCheckboxGroup2
-      }
+      # }
     }, ignoreNULL = FALSE)
     
     cluster <- eventReactive(input$goButton, {
@@ -324,7 +324,7 @@ app_server <- function(Rdata_path){
         )
       }
     }
-    observe({
+    observeEvent(input$df_table_rows_selected, {
       checkboxUpdateBySelectedRows("inCheckboxGroup2", 
                                    input$df_table_rows_selected, 
                                    df_input(), session)
@@ -356,11 +356,9 @@ app_server <- function(Rdata_path){
         resetPaging = TRUE,
         clearSelection = c("all"))
       
-      x <- character(0)
-      updateCheckboxGroupInput(session, "check_nodes",
-                               "0 node(s) selected",
-                               choices = x,
-                               selected = x)
+      checkboxUpdateBySelectedRows("inCheckboxGroup2", 
+                                   input$df_table_rows_selected, 
+                                   df_input(), session)
       
     })
     
