@@ -45,8 +45,8 @@
 
 /*To change text and background color of the `Search` box */
 .dataTables_filter input {
-        color: black;
-        background-color: #F4F2F2;
+        color: white;
+        background-color: transparent;
        }
 thead {
   color: #ffffff;
@@ -54,6 +54,9 @@ thead {
 tbody {
   color: #000000;
 }
+
+
+
 /*.dataTables_filter > label > input{
   color: white;
 }*/

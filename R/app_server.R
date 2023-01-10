@@ -17,11 +17,7 @@ app_server <- function(Rdata_path){
     showNotification("Click 'Help' button to open step-by-step instructions.",
                      duration = 3, type = "warning")
     
-    controls <- reactive({
-      req(Rdata_path)
-      mod_header_server("headerBtn", input$sidebar, selected_nodes, draw.data(), dict.combine)()
-    })
-      
+    mod_header_server("headerBtn", input$sidebar)
 
     attrs = yaml::yaml.load_file(app_sys("app/www/style.yaml"))
     
@@ -30,7 +26,7 @@ app_server <- function(Rdata_path){
     shinyhelper::observe_helpers(help_dir = app_sys("app/doc"))
     
     
-    ####################  input   #################################################
+    # input ====
     
     winsize <- windowSizeServer("win")
     
@@ -39,11 +35,7 @@ app_server <- function(Rdata_path){
     selected_rows <- reactive({df_input()$nodeID[input$df_table_rows_selected]})
     
     selected_nodes <- eventReactive(input$goButton, {
-      # if(input$goButton == 0 & !isTruthy(input$inCheckboxGroup2)){
-        # rownames(cos.list[[1]])[grepl("PheCode", rownames(cos.list[[1]]))][1:5]
-      # } else {
-        input$inCheckboxGroup2
-      # }
+      input$inCheckboxGroup2
     }, ignoreNULL = FALSE)
     
     cluster <- eventReactive(input$goButton, {
@@ -75,16 +67,17 @@ app_server <- function(Rdata_path){
     })
     
     
-    ###############  DT input table   ############################################
+    # DT input table ====
     
     df_input <- reactive({
-      ord <- gsub("\\:.+", "", rownames(CosMatrix()), perl = TRUE)
+      ids <- unique(colnames(CosMatrix()),rownames(CosMatrix()))
+      ord <- gsub("\\:.+", "", ids, perl = TRUE)
       ord <- factor(ord, levels = c("PheCode", "RXNORM", "CCS", "LOINC", "ShortName", "Other lab"))
       df <- data.frame(
-        "nodeID" = rownames(CosMatrix()),
-        "Description" = stringr::str_wrap(dict.combine$Description[match(rownames(CosMatrix()), dict.combine$Variable)], width = 20),
+        "nodeID" = ids,
+        "Description" = stringr::str_wrap(dict.combine$Description[match(ids, dict.combine$Variable)], width = 20),
         "type" = ord,
-        "id" = gsub(".+\\:", "", rownames(CosMatrix()), perl = TRUE)
+        "id" = gsub(".+\\:", "", ids, perl = TRUE)
       )
       df$istarget = "others"
       df$istarget[df$nodeID %in% colnames(CosMatrix())] <- "target"
@@ -106,19 +99,14 @@ app_server <- function(Rdata_path){
     output$df_table <- DT::renderDT(DT::datatable({
       df_input()[, c(1:2, 5)]
     }, rownames = FALSE,
-    # extensions = c("Buttons", "Select"),
     options = list(
       paging = FALSE,
       scrollY = "300px",
       scrollCollapse = TRUE,
       dom = "Bfrtip"
-      # select = list(
-      #   style = "multiple", items = "row",
-      # ),
-      # buttons = list("selectNone")
     ),
     selection = list(mode = 'multiple', 
-                     selected = 1:5, 
+                     selected = c(1,4:7), 
                      target = 'row'),
     escape = FALSE
     ) %>%
@@ -131,12 +119,7 @@ app_server <- function(Rdata_path){
         backgroundColor = DT::styleEqual(c('target', "others"), c('#D5F5E3', 'lightgray'))
       ), server = TRUE)
     
-    ##############  sidebar ######################################################
-    
-    # observeEvent(selected_rows(), {
-    #   checkboxUpdateBySelectedRows(selected_rows(), CosMatrix, session, dict.combine)
-    # })
-    
+    # sidebar ====
     
     observeEvent(input$inCheckboxGroup2, {
       updateCheckboxInput(
@@ -154,11 +137,11 @@ app_server <- function(Rdata_path){
       }
     })
     
-    ######################  network  #############################################
+    # network ====
     
     output$network <- renderUI({
       if (isTruthy(Rdata_path) & (length(selected_nodes()) > 0)) {
-        req(controls())
+        # req(controls())
         req(winsize()[2])
         shinycssloaders::withSpinner(
           visNetwork::visNetworkOutput("network_proxy_nodes",
@@ -190,10 +173,10 @@ app_server <- function(Rdata_path){
     
     output$network_proxy_nodes <- visNetwork::renderVisNetwork({
       plot_network(selected_nodes(), draw.data(), hide_labels(), 
-                   CosMatrix(), dict.combine, attrs, controls()$layout)
+                   CosMatrix(), dict.combine, attrs)
     })
     
-    ##################### info for clicked node   ################################
+    # info for clicked node ====
     
     observeEvent(input$current_node_id$nodes[[1]], {
       if(strsplit(input$current_node_id$nodes[[1]], ":", fixed = TRUE)[[1]][1] == "cluster"){
@@ -208,7 +191,7 @@ app_server <- function(Rdata_path){
     })
     
     
-    #################### info for clicked group   ################################
+    # info for clicked group ====
     
     selected_group <- reactive({
       if (!is.null(input$current_node_id$nodes[[1]])){
@@ -242,9 +225,8 @@ app_server <- function(Rdata_path){
     })
     
     
-    ########################  plots for clicked nodes   ##########################
     
-    ## Generate sunburst plot using plotly =======================================
+    # sunburst ====
     output$sun_ui <- renderUI({
       shinycssloaders::withSpinner(
         plotly::plotlyOutput("sun",
@@ -266,7 +248,7 @@ app_server <- function(Rdata_path){
       )
     })
     
-    ## Generate circular plot using ggplot =======================================
+    # circular plot ====
     output$circularplot <- renderUI({
       div(plotOutput("circular",
                      width = "100%",
@@ -281,7 +263,7 @@ app_server <- function(Rdata_path){
       )
     })
     
-    ##################  addButton   ##############################################
+    # addButton ====
     
     observeEvent(node_id(), {
       if ((!node_id() %in% selected_nodes())){
@@ -301,7 +283,7 @@ app_server <- function(Rdata_path){
                               CosMatrix, session, dict.combine)
     })
     
-    ## Update checkboxinput based on selected rows in table==============
+    # Update checkboxinput based on selected rows in table ====
     checkboxUpdateBySelectedRows <- function(inputid, rows, input_table, session){
       if(!isTruthy(rows)){
         x <- character(0)
@@ -313,9 +295,6 @@ app_server <- function(Rdata_path){
       if(length(rows)!=0){
         x = input_table$nodeID[rows]
         x.name = input_table$Description[rows]
-        print(x)
-        print(x.name)
-        print(inputid)
         updateCheckboxGroupInput(session, inputid,
                                  label = paste(length(x), "node(s) selected:"),
                                  choiceValues = x,
@@ -339,7 +318,7 @@ app_server <- function(Rdata_path){
         clearSelection = c("all"))
       
       x <- character(0)
-      updateCheckboxGroupInput(session, "check_nodes",
+      updateCheckboxGroupInput(session, "inCheckboxGroup2",
                                "0 node(s) selected",
                                choices = x,
                                selected = x)
@@ -362,12 +341,13 @@ app_server <- function(Rdata_path){
       
     })
     
+    # Download ====
     observeEvent(selected_nodes(), {
-      output$downloadData <- WriteData(selected_nodes(), draw.data())
+      output$`headerBtn-downloadData` <- WriteData(selected_nodes(), draw.data())
     })
     
     
-    #################  more info button  #########################################
+    # more info button ====
     
     observeEvent(node_id(), {
       cap <- dict.combine$Capinfo[dict.combine$Variable == node_id()]
@@ -387,12 +367,12 @@ app_server <- function(Rdata_path){
     })
     
     
-    ####################  PheCode  add ICD info  #################################
+    # PheCode add ICD info ====
     
     observeEvent(node_id(), {
       if (node_id() %in% phecode$Phecode) {
         phe_id <- gsub(".+:", "", node_id(), perl = TRUE)
-        href <- paste0("https://hmsrsc.aws.hms.harvard.edu/content/89/?phecode=", phe_id)
+        href <- paste0("https://shiny.parse-health.org/phecodemap/?phecode=", phe_id)
         output$tophecodemap <- renderUI({
           actionButton(
             inputId = "tomap", class = "btn-primary", width = "157px",
@@ -406,7 +386,7 @@ app_server <- function(Rdata_path){
       }
     })
     
-    ###################  more tab   ##############################################
+    # more tab ====
     
     observeEvent(node_id(), {
       if (node_id() %in% c(full_drug_del_med_proc$feature_id, med_proc$feature_id)){
@@ -422,7 +402,7 @@ app_server <- function(Rdata_path){
     })
     
     
-    ####################  RxNorm  add drug info  #################################
+    # RxNorm add drug info ====
     
     df_drugs <- reactive({
       drugs <- full_drug_del_med_proc[full_drug_del_med_proc$feature_id == node_id(), -1]
@@ -470,7 +450,7 @@ app_server <- function(Rdata_path){
     )
     ))
     
-    ############ lab info  #######################################################
+    # lab info ====
     
     output$ui_lab <- renderUI({
       lab_info <- sort(LabMap_0917$LabChemTestName[LabMap_0917$LOINC == node_id()])
