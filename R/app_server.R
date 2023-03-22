@@ -22,6 +22,7 @@ app_server <- function(Rdata_path){
     attrs = yaml::yaml.load_file(app_sys("app/www/style.yaml"))
     
     attrs = lapply(attrs, as.data.frame)
+    attrs$legend_groups$label = stringr::str_replace(attrs$legend_groups$label, 'CCS', 'ProcedureCode')
     
     shinyhelper::observe_helpers(help_dir = app_sys("app/doc"))
     
