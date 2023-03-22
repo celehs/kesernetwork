@@ -40,6 +40,8 @@ circularPreData <- function(data){
   }else{
     grid_data$start = -1
   }
+  
+  
   return(list(`data` = data, `label_data` = label_data, 
               `grid_data` = grid_data, `base_data` = base_data))
 }
@@ -52,7 +54,8 @@ circularBar <- function(thr_cos_pop,
   data = switch((node_now %in% colnames(CosMatrix)) + 1,   
                  CosMatrix[node_now, to, drop = TRUE], 
                  CosMatrix[to, node_now, drop = TRUE])
-  nodes = names(data[data>thr_cos_pop])
+  data = data[data>thr_cos_pop]
+  nodes = names(data)
   labels = dict.combine$Description[match(nodes,dict.combine$Variable)]
   groups = dict.combine$Capinfo[match(nodes,dict.combine$Variable)]
   types = dict.combine$type[match(nodes,dict.combine$Variable)]
@@ -60,10 +63,10 @@ circularBar <- function(thr_cos_pop,
     "individual"=labels,
     "group"=groups,
     "type" = types,
-    "value"=data[data>thr_cos_pop]
+    "value"=data
   )
   data = data %>% dplyr::arrange(.data$type, .data$group, .data$value)
-  data = data[data$value>thr_cos_pop,]
+
   if(nrow(data)>0){
     data$value = data$value*100
     data$group = factor(data$group)
