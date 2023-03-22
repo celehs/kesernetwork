@@ -22,9 +22,9 @@ app_server <- function(Rdata_path){
     attrs = yaml::yaml.load_file(app_sys("app/www/style.yaml"))
     
     attrs = lapply(attrs, as.data.frame)
-    attrs$legend_groups$label = stringr::str_replace(attrs$legend_groups$label, 'CCS', 'Procedure Code')
-    attrs$cap_color$name = stringr::str_replace(attrs$cap_color$name, 'CCS', 'Procedure Code')
-    attrs$attr_nodes_cap$Cap_label = stringr::str_replace(attrs$attr_nodes_cap$Cap_label, 'CCS', 'Procedure Code')
+    attrs$legend_groups$label = stringr::str_replace(attrs$legend_groups$label, 'CCS', 'ProcedureCode')
+    attrs$cap_color$name = stringr::str_replace(attrs$cap_color$name, 'CCS', 'ProcedureCode')
+    attrs$attr_nodes_cap$Cap_label = stringr::str_replace(attrs$attr_nodes_cap$Cap_label, 'CCS', 'ProcedureCode')
     
     
     shinyhelper::observe_helpers(help_dir = app_sys("app/doc"))
