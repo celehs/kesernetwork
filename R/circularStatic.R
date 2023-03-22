@@ -13,9 +13,9 @@ circularPreData <- function(data){
   colnames(to_add) = colnames(data)
   to_add$group=rep(levels(data$group), each=empty_bar)
   data=as.data.frame(rbind(data, to_add))
-  data=data[order(data$group),]
+  data=data[order(data$group), ]
   data$id=seq(1, nrow(data))
-  
+
   # Get the name and the y position of each label
   label_data=data
   number_of_bar=nrow(label_data)
@@ -29,7 +29,6 @@ circularPreData <- function(data){
     dplyr::summarize(start=min(.data$id), end=max(.data$id) - empty_bar) %>%
     dplyr::rowwise() %>%
     dplyr::mutate(title=mean(c(.data$start, .data$end)))
-  
   
   # prepare a data frame for grid (scales)
   grid_data = base_data
@@ -45,13 +44,13 @@ circularPreData <- function(data){
 }
 
 circularBar <- function(thr_cos_pop,
-                       node_now, CosMatrix, 
-                       dict.combine, attrs){
-
+                        node_now, CosMatrix, 
+                        dict.combine, attrs){
+  
   to = getNeighbors(node_now, CosMatrix)
   data = switch((node_now %in% colnames(CosMatrix)) + 1,   
-                 CosMatrix[node_now, to, drop = TRUE], 
-                 CosMatrix[to, node_now, drop = TRUE])
+                CosMatrix[node_now, to, drop = TRUE], 
+                CosMatrix[to, node_now, drop = TRUE])
   data = data[data>thr_cos_pop]
   nodes = names(data)
   labels = dict.combine$Description[match(nodes,dict.combine$Variable)]
@@ -73,7 +72,7 @@ circularBar <- function(thr_cos_pop,
     label_data = circularData$label_data
     grid_data = circularData$grid_data
     base_data = circularData$base_data
-
+    
     
     # Make the plot
     p = ggplot(data, aes(x=as.factor(.data$id), y=.data$value, fill=.data$group)) +       # Note that id is a factor. If x is numeric, there is some space between the first bar
