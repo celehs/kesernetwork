@@ -9,7 +9,6 @@
 circularPreData <- function(data){
   # Set a number of 'empty bar' to add at the end of each group
   empty_bar=3
-  data$group = factor(data$group)
   to_add = data.frame( matrix(NA, empty_bar*nlevels(data$group), ncol(data)) )
   colnames(to_add) = colnames(data)
   to_add$group=rep(levels(data$group), each=empty_bar)
@@ -41,8 +40,6 @@ circularPreData <- function(data){
   }else{
     grid_data$start = -1
   }
-  
-  
   return(list(`data` = data, `label_data` = label_data, 
               `grid_data` = grid_data, `base_data` = base_data))
 }
@@ -66,8 +63,7 @@ circularBar <- function(thr_cos_pop,
     "type" = types,
     "value"=data
   )
-  data = data %>% dplyr::arrange(.data$type, .data$group, .data$value)
-
+  data = data %>% dplyr::arrange(.data$group, .data$value)
   if(nrow(data)>0){
     data$value = data$value*100
     data$group = factor(data$group)
