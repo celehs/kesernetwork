@@ -72,7 +72,7 @@ app_server <- function(Rdata_path){
     df_input <- reactive({
       ids <- unique(colnames(CosMatrix()),rownames(CosMatrix()))
       ord <- gsub("\\:.+", "", ids, perl = TRUE)
-      ord <- factor(ord, levels = c("PheCode", "RXNORM", "CCS", "LOINC", "ShortName", "Other lab"))
+      ord <- factor(ord, levels = c("PheCode", "RXNORM", "ProcedureCode", "LOINC", "ShortName", "Other lab"))
       df <- data.frame(
         "nodeID" = ids,
         "Description" = stringr::str_wrap(dict.combine$Description[match(ids, dict.combine$Variable)], width = 20),
@@ -351,7 +351,7 @@ app_server <- function(Rdata_path){
     
     observeEvent(node_id(), {
       cap <- dict.combine$Capinfo[dict.combine$Variable == node_id()]
-      href = switch(match(cap, c("CCS", "Lab", "PheCode", "RXNORM")), 
+      href = switch(match(cap, c("ProcedureCode", "Lab", "PheCode", "RXNORM")), 
                     "https://hcup-us.ahrq.gov/toolssoftware/ccs_svcsproc/ccssvcproc.jsp",
                     "https://loinc.org/multiaxial-hierarchy/",
                     "https://phewascatalog.org/phecodes_icd10cm",
