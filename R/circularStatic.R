@@ -9,6 +9,7 @@
 circularPreData <- function(data){
   # Set a number of 'empty bar' to add at the end of each group
   empty_bar=3
+  data$group = factor(data$group)
   to_add = data.frame( matrix(NA, empty_bar*nlevels(data$group), ncol(data)) )
   colnames(to_add) = colnames(data)
   to_add$group=rep(levels(data$group), each=empty_bar)
