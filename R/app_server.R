@@ -26,7 +26,22 @@ app_server <- function(Rdata_path){
     attrs$cap_color$name = stringr::str_replace(attrs$cap_color$name, 'CCS', 'ProcedureCode')
     attrs$attr_nodes_cap$Cap_label = stringr::str_replace(attrs$attr_nodes_cap$Cap_label, 'CCS', 'ProcedureCode')
     
-    
+    color_dict = data.frame(code_type = c('PheCode', 'LOINC', 'RXNORM', 'ProcedureCode',
+                                          'VA Lab Code', 'VA Lab Group', 'Lab'),
+                            color = c('#00C6F2', '#30E3A4', '#C7A8F0', '#F20C51',
+                                      '#30E3A4', '#30E3A4', '#30E3A4'))
+    ## order: procedure, loinc(lab), lab, phecode, rxnorm, lab
+    attrs$attr_nodes_cap$color.background = 
+      attrs$attr_nodes_cap$color.highlight.background =
+      attrs$attr_nodes_cap$color.hover.background =
+      attrs$attr_nodes_cap$color.border =
+      color_dict$color[match(attrs$attr_nodes_cap$Cap_label, color_dict$code_type)] 
+
+    attrs$legend_groups$color[attrs$legend_groups$label %in% color_dict$code_type] = 
+      color_dict$color[match(attrs$legend_groups$color[attrs$legend_groups$label %in% color_dict$code_type], color_dict$code_type)] 
+ 
+    attrs$cap_color$color =  color_dict$color[match(attrs$cap_color$name, color_dict$code_type)] 
+      
     shinyhelper::observe_helpers(help_dir = app_sys("app/doc"))
     
     
