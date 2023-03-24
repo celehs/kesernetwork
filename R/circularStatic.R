@@ -115,6 +115,6 @@ circularBar <- function(thr_cos_pop,
 
 colorList <- function(attrs){
   list_color <- attrs$cap_color$color
-  names(list_color) <- str_remove(attrs$cap_color$name, ' ')
+  names(list_color) <- stringr::str_remove(attrs$cap_color$name, ' ')
   return(list_color)
 }
