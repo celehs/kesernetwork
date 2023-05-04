@@ -21,6 +21,7 @@ Imports:
     reactable, 
     rintrojs,
     rlang,
+    igraph,
     shinycssloaders,
     shinydashboard,
     shinydashboardPlus,
