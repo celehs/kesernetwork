@@ -38,7 +38,6 @@ dataNetwork <- function(selected_nodes, CosMatrix, dict.combine, attrs){
 
 
   df_edges <- left_join(df_edges, attr_edges, by = "edgetype")
-
   df_nodes <- data.frame(id = unique(c(df_edges$from, df_edges$to)))
   df_nodes <- left_join(df_nodes, dict.combine[, c(1, 5, 7, 8, 4)], by = c("id" = "Variable"))
   colnames(df_nodes) <- c("id", "label", "group", "group_title", "Cap")
@@ -68,7 +67,9 @@ dataNetwork <- function(selected_nodes, CosMatrix, dict.combine, attrs){
   })
   
   df_nodes$title = paste0(df_nodes$title, text_freq)
-  
+  df_nodes$select_group = df_nodes$Cap_label
+  df_nodes$select_group[df_nodes$id %in% selected_nodes] = paste0(unique(df_nodes$Cap_label), collapse = ',')
+
   df_nodes$font.background[is.na(df_nodes$font.background)] <- ""
 
   df_groups = df_nodes[, c("group", "color.background")]
@@ -87,14 +88,18 @@ add_attr_network <- function(p, layout = "layout_nicely"){
     visNetwork::visEdges(physics = FALSE,
     smooth = FALSE,
     hoverWidth = 2.5) %>%
-    visNetwork::visOptions(highlightNearest = list(enabled = T,
-                                       degree = 1,
-                                       hover = FALSE,
-                                       hideColor = "rgba(200,200,200,0.2)"),
-               selectedBy = list(`variable` = "Cap_label",
-                                 `multiple` = TRUE,
-                                 `main` = "Select by group"),
-               collapse = FALSE) %>%
+    visNetwork::visOptions(
+      highlightNearest = list(
+      enabled = TRUE,
+      degree = 1,
+      hover = FALSE,
+      hideColor = "rgba(200,200,200,0)"),
+      selectedBy = list(`variable` = c("select_group"),
+                        `multiple` = TRUE,
+                        `highlight` = FALSE,
+                        `hideColor` = "rgba(200,200,200,0)",
+                        `main` = "Select by group"),
+      collapse = FALSE) %>%
     visNetwork::visInteraction(hover = TRUE) %>%
     visNetwork::visIgraphLayout(layout = layout,
                     physics = FALSE,
@@ -117,11 +122,14 @@ plot_network <- function(s, draw.data, hide_label, CosMatrix, dict.combine, attr
     if(nrow(df_edges) > 0){
     if(hide_label){
       df_nodes$label <- "        "
-      df_nodes$font.size[df_nodes$nodetype == "target"] <- 50
+      df_nodes$font.size[df_nodes$nodetype == "target"] <- 40
       df_nodes$font.size[df_nodes$nodetype == "other"] <- 30
       df_nodes$font.background <- NA
       attrs$legend_groups$size[1:7] <- 10
       attrs$legend_groups$borderWidth <- 1
+    }else{
+      df_nodes$font.size[df_nodes$nodetype == "target"] <- 50
+      df_nodes$font.size[df_nodes$nodetype == "other"] <- 40
     }
     
     legend_to_show <- c(5:10)[(attrs$legend_groups$label[5:10] %in% unique(df_nodes$Cap_label[!df_nodes$id %in% colnames(CosMatrix)]))]
