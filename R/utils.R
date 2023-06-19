@@ -5,19 +5,19 @@
 clickedNodeText <- function(node_id, dict.combine){
   
   title = paste0("<h3>",node_id, " </h3>",
-                 "<br><b>Description: </b>",dict.combine$Description[match(node_id,dict.combine$Variable)],
-                 "<br><b>Group: </b>", dict.combine$group[match(node_id,dict.combine$Variable)])
-  if(!is.na(dict.combine$marginal_pat_VA[match(node_id,dict.combine$Variable)])){
+                 "<br><b>Description: </b>",dict.combine$term[match(node_id,dict.combine$id)],
+                 "<br><b>Group: </b>", dict.combine$groupdesc[match(node_id,dict.combine$id)])
+  if(!is.na(dict.combine$marginal_pat_VA[match(node_id,dict.combine$id)])){
     title = paste0(title,
                    "<br><b>Patient prevalence: </b>", 
-                   round(dict.combine$marginal_pat_VA[match(node_id,dict.combine$Variable)]/12600000,4))
+                   round(dict.combine$marginal_pat_VA[match(node_id,dict.combine$id)]/12600000,4))
   }
-  if(!is.na(dict.combine$marginal_freq_VA[match(node_id,dict.combine$Variable)]/
-            dict.combine$marginal_pat_VA[match(node_id,dict.combine$Variable)])){
+  if(!is.na(dict.combine$marginal_freq_VA[match(node_id,dict.combine$id)]/
+            dict.combine$marginal_pat_VA[match(node_id,dict.combine$id)])){
     title = paste0(title,
                    "<br><b>Ave count per patient: </b>", 
-                   round(dict.combine$marginal_freq_VA[match(node_id,dict.combine$Variable)]/
-                         dict.combine$marginal_pat_VA[match(node_id,dict.combine$Variable)],2))
+                   round(dict.combine$marginal_freq_VA[match(node_id,dict.combine$id)]/
+                         dict.combine$marginal_pat_VA[match(node_id,dict.combine$id)],2))
   }
 
   HTML(title)
@@ -26,7 +26,7 @@ clickedNodeText <- function(node_id, dict.combine){
 
 updateCheckboxCandidate <- function(x, CosMatrix, session, dict.combine){
   if (length(x) != 0) {
-    x.name <- dict.combine$Description[match(x, dict.combine$Variable)]
+    x.name <- dict.combine$term[match(x, dict.combine$id)]
   } else {
     x <- x.name <- character(0)
   }

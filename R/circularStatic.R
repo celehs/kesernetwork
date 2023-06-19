@@ -7,13 +7,13 @@
 
 ## Generate circular plot using ggplot =======================================
 circularPreData <- function(data){
-  # Set a number of 'empty bar' to add at the end of each group
+  # Set a number of 'empty bar' to add at the end of each category
   empty_bar=3
-  to_add = data.frame( matrix(NA, empty_bar*nlevels(data$group), ncol(data)) )
+  to_add = data.frame( matrix(NA, empty_bar*nlevels(data$category), ncol(data)) )
   colnames(to_add) = colnames(data)
-  to_add$group=rep(levels(data$group), each=empty_bar)
+  to_add$category=rep(levels(data$category), each=empty_bar)
   data=as.data.frame(rbind(data, to_add))
-  data=data[order(data$group), ]
+  data=data[order(data$category), ]
   data$id=seq(1, nrow(data))
 
   # Get the name and the y position of each label
@@ -25,7 +25,7 @@ circularPreData <- function(data){
   
   # prepare a data frame for base lines
   base_data=data %>%
-    dplyr::group_by(.data$group) %>%
+    dplyr::group_by(.data$category) %>%
     dplyr::summarize(start=min(.data$id), end=max(.data$id) - empty_bar) %>%
     dplyr::rowwise() %>%
     dplyr::mutate(title=mean(c(.data$start, .data$end)))
@@ -44,28 +44,14 @@ circularPreData <- function(data){
 }
 
 circularBar <- function(thr_cos_pop,
-                        node_now, CosMatrix, 
+                        node_now, df_edges, 
                         dict.combine, attrs){
   
-  to = getNeighbors(node_now, CosMatrix)
-  data = switch((node_now %in% colnames(CosMatrix)) + 1,   
-                CosMatrix[node_now, to, drop = TRUE], 
-                CosMatrix[to, node_now, drop = TRUE])
-  data = data[data>thr_cos_pop]
-  nodes = names(data)
-  labels = dict.combine$Description[match(nodes,dict.combine$Variable)]
-  groups = dict.combine$Capinfo[match(nodes,dict.combine$Variable)]
-  types = dict.combine$type[match(nodes,dict.combine$Variable)]
-  data = data.frame(
-    "individual"=labels,
-    "group"=groups,
-    "type" = types,
-    "value"=data
-  )
-  data = data %>% dplyr::arrange(.data$group, .data$value)
+  data <- right_join(dict.combine[, c("id", "term", "category")], df_edges[, c("to", "weight")], by = c("id" = "to"))
+  data = data %>% dplyr::arrange(.data$category, .data$weight)
   if(nrow(data)>0){
-    data$value = data$value*100
-    data$group = factor(data$group)
+    data$weight = data$weight*100
+    data$category = factor(data$category)
     
     circularData = circularPreData(data)
     data = circularData$data
@@ -75,9 +61,9 @@ circularBar <- function(thr_cos_pop,
     
     
     # Make the plot
-    p = ggplot(data, aes(x=as.factor(.data$id), y=.data$value, fill=.data$group)) +       # Note that id is a factor. If x is numeric, there is some space between the first bar
-      # scale_fill_manual(values = color.df$color) +
-      geom_bar(aes(x=as.factor(.data$id), y=.data$value, fill=.data$group), stat="identity") +
+    p = ggplot(data, aes(x=as.factor(.data$id), y=.data$weight, fill=.data$category)) +       # Note that id is a factor. If x is numeric, there is some space between the first bar
+      # scale_fill_manual(weights = color.df$color) +
+      geom_bar(aes(x=as.factor(.data$id), y=.data$weight, fill=.data$category), stat="identity") +
       
       # Add a val=.8/.6/.4/.2 lines. I do it at the beginning to make sur barplots are OVER it.
       geom_segment(data=grid_data, aes(x = .data$end, y = 80, xend = .data$start, yend = 80), colour = "grey", alpha=1, size=0.3 , inherit.aes = FALSE ) +
@@ -85,11 +71,11 @@ circularBar <- function(thr_cos_pop,
       geom_segment(data=grid_data, aes(x = .data$end, y = 40, xend = .data$start, yend = 40), colour = "grey", alpha=1, size=0.3 , inherit.aes = FALSE ) +
       geom_segment(data=grid_data, aes(x = .data$end, y = 20, xend = .data$start, yend = 20), colour = "grey", alpha=1, size=0.3 , inherit.aes = FALSE ) +
       
-      # Add text showing the value of each .8/.6/.4/.2 lines
+      # Add text showing the weight of each .8/.6/.4/.2 lines
       annotate("text", x = rep(max(data$id),4), y = c(20, 40, 60, 80), label = c("0.2", "0.4", "0.6", "0.8") , color="grey", size=3 , angle=0, fontface="bold", hjust=1) +
       
-      # geom_bar(aes(x=as.factor(id), y=value, fill=group), stat="identity", alpha=0.5) +
-      ylim(-50,max(na.omit(data$value))+10) +
+      # geom_bar(aes(x=as.factor(id), y=weight, fill=category), stat="identity", alpha=0.5) +
+      ylim(-50,max(na.omit(data$weight))+10) +
       theme_minimal() +
       theme(
         legend.position = "none",
@@ -99,11 +85,11 @@ circularBar <- function(thr_cos_pop,
         plot.margin = unit(rep(1,4), "cm")
       ) +
       coord_polar() +
-      geom_text(data=label_data, aes(x=.data$id, y=.data$value+3, label=.data$individual, hjust=.data$hjust), color="black", fontface="bold",alpha=0.6, size=2.5, angle= label_data$angle, inherit.aes = FALSE ) +
+      geom_text(data=label_data, aes(x=.data$id, y=.data$weight+3, label=.data$term, hjust=.data$hjust), color="black", fontface="bold",alpha=0.6, size=2.5, angle= label_data$angle, inherit.aes = FALSE ) +
       #
       # Add base line information
       geom_segment(data=base_data, aes(x = .data$start, y = -5, xend = .data$end, yend = -5), colour = "black", alpha=0.8, size=0.6 , inherit.aes = FALSE )  +
-      geom_text(data=base_data, aes(x = .data$title, y = -10, label=.data$group), colour = "black", alpha=0.8, size=3, fontface="bold", inherit.aes = FALSE) + 
+      geom_text(data=base_data, aes(x = .data$title, y = -10, label=.data$category), colour = "black", alpha=0.8, size=3, fontface="bold", inherit.aes = FALSE) + 
       scale_fill_manual(values=colorList(attrs))
     p
   }else{
@@ -115,6 +101,6 @@ circularBar <- function(thr_cos_pop,
 
 colorList <- function(attrs){
   list_color <- attrs$cap_color$color
-  names(list_color) <- stringr::str_remove(attrs$cap_color$name, ' ')
+  names(list_color) <- attrs$cap_color$index01
   return(list_color)
 }

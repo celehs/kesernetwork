@@ -96,19 +96,19 @@ app_server <- function(Rdata_path){
     # DT input table ====
     
     df_input <- reactive({
-      ids <- unique(colnames(CosMatrix()),rownames(CosMatrix()))
+      ids <- unique(colnames(CosMatrix()))
       ord <- gsub("\\:.+", "", ids, perl = TRUE)
       ord <- factor(ord, levels = c("PheCode", "RXNORM", "ProcedureCode", "LOINC", "ShortName", "Other lab"))
       df <- data.frame(
         "nodeID" = ids,
-        "Description" = stringr::str_wrap(dict.combine$Description[match(ids, dict.combine$Variable)], width = 20),
+        "Description" = stringr::str_wrap(dict.combine$term[match(ids, dict.combine$id)], width = 20),
         "type" = ord,
         "id" = gsub(".+\\:", "", ids, perl = TRUE)
       )
       df$istarget = "others"
       df$istarget[df$nodeID %in% colnames(CosMatrix())] <- "target"
       df <- df[with(df, order(type, id)), ]
-      df <- df[with(df, order(istarget, decreasing = TRUE)), ]
+      df[with(df, order(istarget, decreasing = TRUE)), ]
     })
     
     output$ui_table <- renderUI({
@@ -132,7 +132,7 @@ app_server <- function(Rdata_path){
       dom = "Bfrtip"
     ),
     selection = list(mode = 'multiple', 
-                     selected = c(1,4:7), 
+                     selected = 1220, 
                      target = 'row'),
     escape = FALSE
     ) %>%
@@ -165,6 +165,52 @@ app_server <- function(Rdata_path){
     
     # network ====
     
+    getCos <- function(nodes, matrix){
+      if((nodes %in% colnames(matrix))[1]){
+        df <- matrix[, nodes, drop = FALSE]
+        summ <- Matrix::summary(df)
+        data.frame("from" = colnames(df)[summ$j],
+                   "to" = rownames(df)[summ$i],
+                   "weight" = summ$x)
+      } else {
+        df <- matrix[nodes, , drop = FALSE]
+        summ <- Matrix::summary(df)
+        data.frame("from" = rownames(df)[summ$i],
+                   "to" = colnames(df)[summ$j],
+                   "weight" = summ$x)
+      }
+    }
+    
+    df_edges <- reactive({
+      req(selected_nodes())
+      getCos(selected_nodes(), CosMatrix())
+    })
+    
+    df_edges_groups <- reactive({
+      if(nrow(df_edges())){
+        df_filters <- df_edges()
+        df_filters$groupid <- dict.combine$groupid[match(df_filters$to, dict.combine$id)]
+        df_filters$center <- df_filters$from
+        df_filters_1 <- df_filters %>%
+          dplyr::group_by(.data$from, .data$groupid, .data$center) %>%
+          dplyr::summarise(weight = max(.data$weight), n = dplyr::n())
+        df_filters_1$to <- df_filters$to[match(df_filters_1$groupid, df_filters$groupid)]
+        df_filters_1$to[df_filters_1$n > 1] <- paste0("Group:", df_filters_1$groupid[df_filters_1$n > 1])
+        
+        df_filters_2 <- df_filters[df_filters$groupid %in% df_filters_1$groupid[grepl("Group:", df_filters_1$to)], ]
+        df_filters_2$from <- paste0("Group:", df_filters_2$groupid)
+        print("dim(df_filters_1)")
+        print(dim(df_filters_1))
+        print("dim(df_filters_2)")
+        print(dim(df_filters_2))
+        df_filters <- rbind(df_filters_1, df_filters_2)
+        print("dim(df_filters)")
+        print(dim(df_filters))
+        # saveRDS(df_filters, "test_df_edges_groups_v20221128.rds")
+        df_filters
+      }
+    })
+    
     output$network <- renderUI({
       if (isTruthy(Rdata_path) & (length(selected_nodes()) > 0)) {
         # req(controls())
@@ -188,18 +234,10 @@ app_server <- function(Rdata_path){
       }
     })
     
-    draw.data <- eventReactive(selected_nodes(), {
-      if (length(selected_nodes()) != 0) {
-        input.correct <- selected_nodes()[1:min(50, length(selected_nodes()))]
-        dataNetwork(input.correct, CosMatrix(), dict.combine, attrs)
-      } else {
-        NA
-      }
-    })
     
     output$network_proxy_nodes <- visNetwork::renderVisNetwork({
-      plot_network(selected_nodes(), draw.data(), hide_labels(), 
-                   CosMatrix(), dict.combine, attrs)
+      plot_network(df_edges_groups(), selected_nodes(), hide_labels(), 
+                   dict.combine, attrs)
     })
     
     # info for clicked node ====
@@ -250,27 +288,24 @@ app_server <- function(Rdata_path){
                 })
     })
     
-    
+    df_clicked <- reactive({
+      getCos(node_id(), CosMatrix())
+    })
     
     # sunburst ====
     output$sun_ui <- renderUI({
       shinycssloaders::withSpinner(
         plotly::plotlyOutput("sun",
                      width = "auto",
-                     height = paste0(input$scale_sungh, "px")
+                     height = "750px"
         )
         , type = 6
       )
     })
     
     output$sun <- plotly::renderPlotly({
-      changeline <- input$changeline
-      rotatelabel <- input$rotatelabel
-      scale_sungh <- input$scale_sungh
-      sunburstPlot(
-        thr_cos = 0.01,
-        changeline, rotatelabel, scale_sungh,
-        node_id(), CosMatrix(), dict.combine, attrs$cap_color
+      sunburstPlotly(
+        node_id(), df_clicked(), dict.combine, attrs$cap_color
       )
     })
     
@@ -285,7 +320,7 @@ app_server <- function(Rdata_path){
     output$circular <- renderPlot({
       circularBar(
         thr_cos_pop = 0.01,
-        node_id(), CosMatrix(), dict.combine, attrs
+        node_id(), df_clicked(), dict.combine, attrs
       )
     })
     
@@ -376,8 +411,8 @@ app_server <- function(Rdata_path){
     # more info button ====
     
     observeEvent(node_id(), {
-      cap <- dict.combine$Capinfo[dict.combine$Variable == node_id()]
-      href = switch(match(cap, c("ProcedureCode", "Lab", "PheCode", "RXNORM")), 
+      cap <- dict.combine$category[dict.combine$id == node_id()]
+      href = switch(match(cap, c("Procedure", "Lab", "Disease", "Drug")), 
                     "https://hcup-us.ahrq.gov/toolssoftware/ccs_svcsproc/ccssvcproc.jsp",
                     "https://loinc.org/multiaxial-hierarchy/",
                     "https://phewascatalog.org/phecodes_icd10cm",

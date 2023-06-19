@@ -52,18 +52,12 @@ app_ui <- function(request) {
       uiOutput("ui_table"),
       div(
         # checkboxGroupInput("inCheckboxGroup2", "0 node(s) Selected:"),
-        checkboxGroupInput("inCheckboxGroup2", "5 nodes selected:",
-          choiceValues = c("PheCode:008.5", "PheCode:008.6", "PheCode:008.7",
-                           "PheCode:010", "PheCode:031"),
+        checkboxGroupInput("inCheckboxGroup2", "1 nodes selected:",
+          choiceValues = c("PheCode:714.1"),
           choiceNames = c(
-            "PheCode:008.5: bacterial enteritis",
-            "PheCode:008.6: viral enteritis",
-            "PheCode:008.7: intestinal infection due to protozoa",
-            "PheCode:010: tuberculosis",
-            "PheCode:031: diseases due to other mycobacteria"
+            "PheCode:714.1: rheumatoid arthritis"
           ),
-          selected = c("PheCode:008.5", "PheCode:008.6", "PheCode:008.7",
-                       "PheCode:010", "PheCode:031"),
+          selected = c("PheCode:714.1"),
           width = "100%"
         ),
         id = "divcheckboxgroups"
@@ -125,22 +119,6 @@ app_ui <- function(request) {
           tabPanel(
             title = "Sunburst plot",
             br(),
-            fluidRow(
-              column(
-                6,
-                shinyWidgets::sliderTextInput("changeline", "max Text length on each line (set as 99 if not breaking lines:)",
-                                choices = c(5, 10, 15, 20, 25, 99), selected = 10, grid = TRUE, width = "100%"
-                ),
-                shinyWidgets::pickerInput(
-                  inputId = "rotatelabel",
-                  label = "The orientation of text inside sectors",
-                  choices = c("Radial", "Tangential")
-                )
-              ),
-              column(6, sliderInput("scale_sungh", "Graph height:",
-                                    min = 500, max = 1000, value = 750, width = "100%"
-              ))
-            ),
             div(uiOutput("sun_ui"), align = "center")
           ),
           tabPanel(
