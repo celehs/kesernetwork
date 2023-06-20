@@ -47,7 +47,7 @@ circularBar <- function(thr_cos_pop,
                         node_now, df_edges, 
                         dict.combine, attrs){
   
-  data <- right_join(dict.combine[, c("id", "term", "category")], df_edges[, c("to", "weight")], by = c("id" = "to"))
+  data <- dplyr::right_join(dict.combine[, c("id", "term", "category")], df_edges[, c("to", "weight")], by = c("id" = "to"))
   data = data %>% dplyr::arrange(.data$category, .data$weight)
   if(nrow(data)>0){
     data$weight = data$weight*100

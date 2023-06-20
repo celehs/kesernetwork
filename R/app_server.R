@@ -34,7 +34,7 @@ app_server <- function(Rdata_path){
     color_dict = data.frame(code_type = c('PheCode', 'LOINC', 'RXNORM', 'ProcedureCode','Procedure Code',
                                           'VA Lab Code', 'VA Lab Group', 'Lab'),
                             color = c('#00C6F2', '#30E3A4', '#C7A8F0', '#F20C51', '#F20C51',
-                                      '#30E3A4', '#FAE48B', '#30E3A4'))
+                                      '#FAE48B', '#FAE48B', '#30E3A4'))
     
     ## order: procedure, loinc(lab), lab, phecode, rxnorm, lab
     attrs$attr_nodes_cap$color.background = 
@@ -236,7 +236,7 @@ app_server <- function(Rdata_path){
     
     
     output$network_proxy_nodes <- visNetwork::renderVisNetwork({
-      plot_network(df_edges_groups(), selected_nodes(), hide_labels(), 
+      plot_network(df_edges_groups(), colnames(CosMatrix()), hide_labels(), 
                    dict.combine, attrs)
     })
     
