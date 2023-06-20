@@ -19,6 +19,8 @@
 <![endif]-->
 </head>
 <body data-spy="scroll" data-target="#toc">
+    
+
     <div class="container template-article">
       <header><div class="navbar navbar-inverse navbar-fixed-top" role="navigation">
   <div class="container">
@@ -31,7 +33,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">kesernetwork</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.2.0</span>
       </span>
     </div>
 
@@ -52,7 +54,7 @@
       </ul>
 <ul class="nav navbar-nav navbar-right">
 <li>
-  <a href="https://celehs.github.io">CELEHS Software</a>
+  <a href="https://celehs.github.io" class="external-link">CELEHS Software</a>
 </li>
       </ul>
 </div>
@@ -64,39 +66,54 @@
 
       
 
-      </header><script src="getstarted_files/accessible-code-block-0.0.1/empty-anchor.js"></script><div class="row">
+      </header><div class="row">
   <div class="col-md-9 contents">
     <div class="page-header toc-ignore">
       <h1 data-toc-skip>Network</h1>
             
       
-      <small class="dont-index">Source: <a href="https://github.com/celehs/kesernetwork/blob/master/vignettes/getstarted.Rmd"><code>vignettes/getstarted.Rmd</code></a></small>
+      <small class="dont-index">Source: <a href="https://github.com/celehs/kesernetwork/blob/HEAD/vignettes/getstarted.Rmd" class="external-link"><code>vignettes/getstarted.Rmd</code></a></small>
       <div class="hidden name"><code>getstarted.Rmd</code></div>
 
     </div>
 
     
     
-<div id="input-center-nodes" class="section level3">
-<h3 class="hasAnchor">
-<a href="#input-center-nodes" class="anchor"></a>Input center nodes</h3>
-<p>First of all, click a row in the input table. You can also enter some items in the filtering bar for each column (phenotype, ICD description etc.) to spot on your targets. Once a row are selected, the app will automatically display the hierarchy with the selected phecode as root node in the sunburst and tree plot.</p>
+<div class="section level3">
+<h3 id="input-center-nodes">Input center nodes<a class="anchor" aria-label="anchor" href="#input-center-nodes"></a>
+</h3>
+<p>First of all, click a row in the input table. You can also enter some
+items in the filtering bar for each column (phenotype, ICD description
+etc.) to spot on your targets. Once a row are selected, the app will
+automatically display the hierarchy with the selected phecode as root
+node in the sunburst and tree plot.</p>
 <div class="figure">
 <img src="1.steps.gif" alt=""><p class="caption">steps</p>
 </div>
 <ul>
-<li>Step 1: Select a data set of Knowledge network construction method.</li>
-<li>Step 2: Select some target nodes (green rows) as candidate nodes to display the network. Multiple inputs are acceptable. You can also use the search bar on the top to spot on your targets. A second round of searching will not mask the previous selection, which will be kept unless you de-select the row or use the “Unselect” button on the navigation bar.</li>
+<li>Step 1: Select a data set of Knowledge network construction
+method.</li>
+<li>Step 2: Select some target nodes (green rows) as candidate nodes to
+display the network. Multiple inputs are acceptable. You can also use
+the search bar on the top to spot on your targets. A second round of
+searching will not mask the previous selection, which will be kept
+unless you de-select the row or use the “Unselect” button on the
+navigation bar.</li>
 <li>Step 3: Screening selected rows for candidate nodes.</li>
-<li>Step 4: Settings: 1) Cluster nodes by groups. 2) Show/Hide the labels in the network.</li>
+<li>Step 4: Settings: 1) Cluster nodes by groups. 2) Show/Hide the
+labels in the network.</li>
 <li>Step 5: Confirm submission.</li>
 </ul>
 </div>
-<div id="explore-network-information" class="section level3">
-<h3 class="hasAnchor">
-<a href="#explore-network-information" class="anchor"></a>Explore network information</h3>
+<div class="section level3">
+<h3 id="explore-network-information">Explore network information<a class="anchor" aria-label="anchor" href="#explore-network-information"></a>
+</h3>
 <p>Main panel</p>
-<p>In general, the selected nodes will be the center nodes of the network. Nodes were rendered into 4 colors and 2 shapes(ellipse nodes are targets nodes). By hovering mouse onto any node, basic information (id, name, group, etc.) will be showed. Click the node will popup a page with more information.</p>
+<p>In general, the selected nodes will be the center nodes of the
+network. Nodes were rendered into 4 colors and 2 shapes(ellipse nodes
+are targets nodes). By hovering mouse onto any node, basic information
+(id, name, group, etc.) will be showed. Click the node will popup a page
+with more information.</p>
 <div class="figure">
 <img src="2.network_hover.png" alt=""><p class="caption">network</p>
 </div>
@@ -114,8 +131,10 @@
 <li>Bottom:</li>
 </ol>
 <ul>
-<li>Circular plot: the cosine similarity of the connected nodes with the clicked node.</li>
-<li>Sunburst plot: the hierarchy of the connected nodes with the clicked node.</li>
+<li>Circular plot: the cosine similarity of the connected nodes with the
+clicked node.</li>
+<li>Sunburst plot: the hierarchy of the connected nodes with the clicked
+node.</li>
 <li>Drug information: only for RxNorm nodes.</li>
 <li>Lab information: only for Lab nodes.</li>
 </ul>
@@ -134,11 +153,13 @@
 
 
       <footer><div class="copyright">
-  <p>Developed by Su-Chun Cheng, PARSE LTD, VA CIPHER, Verity Research, CELEHS.</p>
+  <p></p>
+<p>Developed by Su-Chun Cheng, PARSE LTD, VA CIPHER, Verity Research, CELEHS.</p>
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.1.</p>
+  <p></p>
+<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.7.</p>
 </div>
 
       </footer>
@@ -146,6 +167,8 @@
 
   
 
+
+  
 
   </body>
 </html>

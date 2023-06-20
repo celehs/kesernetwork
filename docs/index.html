@@ -19,6 +19,8 @@
 <![endif]-->
 </head>
 <body data-spy="scroll" data-target="#toc">
+    
+
     <div class="container template-home">
       <header><div class="navbar navbar-inverse navbar-fixed-top" role="navigation">
   <div class="container">
@@ -31,7 +33,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="index.html">kesernetwork</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.2.0</span>
       </span>
     </div>
 
@@ -52,7 +54,7 @@
       </ul>
 <ul class="nav navbar-nav navbar-right">
 <li>
-  <a href="https://celehs.github.io">CELEHS Software</a>
+  <a href="https://celehs.github.io" class="external-link">CELEHS Software</a>
 </li>
       </ul>
 </div>
@@ -66,41 +68,41 @@
 
       </header><div class="row">
   <div class="contents col-md-9">
-<div id="kesernetwork" class="section level1">
-<div class="page-header"><h1 class="hasAnchor">
-<a href="#kesernetwork" class="anchor"></a>kesernetwork</h1></div>
+<div class="section level1">
+<div class="page-header"><h1 id="kesernetwork">kesernetwork<a class="anchor" aria-label="anchor" href="#kesernetwork"></a>
+</h1></div>
 <!-- badges: start -->
 
-<div id="overview" class="section level2">
-<h2 class="hasAnchor">
-<a href="#overview" class="anchor"></a>Overview</h2>
+<div class="section level2">
+<h2 id="overview">Overview<a class="anchor" aria-label="anchor" href="#overview"></a>
+</h2>
 <p>The kesernetwork builds a shiny app to visualize the knowledge networks for the code concepts. Using co-occurrence matrices of EHR codes from Veterans Affairs (VA) and Massachusetts General Brigham (MGB), the knowledge extraction via sparse embedding regression (KESER) algorithm was used to construct knowledge networks for the code concepts.</p>
 </div>
-<div id="installation" class="section level2">
-<h2 class="hasAnchor">
-<a href="#installation" class="anchor"></a>Installation</h2>
+<div class="section level2">
+<h2 id="installation">Installation<a class="anchor" aria-label="anchor" href="#installation"></a>
+</h2>
 <p>Install the released version of kesernetwork from CRAN:</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html">install.packages</a></span><span class="op">(</span><span class="st">"kesernetwork"</span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html" class="external-link">install.packages</a></span><span class="op">(</span><span class="st">"kesernetwork"</span><span class="op">)</span></span></code></pre></div>
 <p>Or install the development version from GitHub with:</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html">install.packages</a></span><span class="op">(</span><span class="st">"remotes"</span><span class="op">)</span>
-<span class="fu">remotes</span><span class="fu">::</span><span class="fu"><a href="https://remotes.r-lib.org/reference/install_github.html">install_github</a></span><span class="op">(</span><span class="st">"celehs/kesernetwork"</span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html" class="external-link">install.packages</a></span><span class="op">(</span><span class="st">"remotes"</span><span class="op">)</span></span>
+<span><span class="fu">remotes</span><span class="fu">::</span><span class="fu"><a href="https://remotes.r-lib.org/reference/install_github.html" class="external-link">install_github</a></span><span class="op">(</span><span class="st">"celehs/kesernetwork"</span><span class="op">)</span></span></code></pre></div>
 </div>
-<div id="usage" class="section level2">
-<h2 class="hasAnchor">
-<a href="#usage" class="anchor"></a>Usage</h2>
-<p>This is a basic example which shows you how to run the <code>kesernetwork</code> app. Remember you need to get access to the data and save it to your local computer. In order to guarantee some dependencies are loaded, you must use <code><a href="https://github.com/celehs/kesernetwork">library(kesernetwork)</a></code> beforehand, instead of directly running <code><a href="reference/run_app.html">kesernetwork::run_app()</a></code>.</p>
+<div class="section level2">
+<h2 id="usage">Usage<a class="anchor" aria-label="anchor" href="#usage"></a>
+</h2>
+<p>This is a basic example which shows you how to run the <code>kesernetwork</code> app. Remember you need to get access to the data and save it to your local computer. In order to guarantee some dependencies are loaded, you must use <code><a href="https://github.com/celehs/kesernetwork" class="external-link">library(kesernetwork)</a></code> beforehand, instead of directly running <code><a href="reference/run_app.html">kesernetwork::run_app()</a></code>.</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/celehs/kesernetwork">kesernetwork</a></span><span class="op">)</span>
-<span class="fu"><a href="reference/run_app.html">run_app</a></span><span class="op">(</span>Rdata_path <span class="op">=</span> <span class="st">"path/to/kesernetwork.RData"</span><span class="op">)</span></code></pre></div>
-<p>See the <a href="https://celehs.github.io/kesernetwork/articles/main.html">getting started guide</a> to learn how to use kesernetwork.</p>
+<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/celehs/kesernetwork" class="external-link">kesernetwork</a></span><span class="op">)</span></span>
+<span><span class="fu"><a href="reference/run_app.html">run_app</a></span><span class="op">(</span>Rdata_path <span class="op">=</span> <span class="st">"path/to/kesernetwork.RData"</span><span class="op">)</span></span></code></pre></div>
+<p>See the <a href="https://celehs.github.io/kesernetwork/articles/main.html" class="external-link">getting started guide</a> to learn how to use kesernetwork.</p>
 </div>
-<div id="citations" class="section level2">
-<h2 class="hasAnchor">
-<a href="#citations" class="anchor"></a>Citations</h2>
+<div class="section level2">
+<h2 id="citations">Citations<a class="anchor" aria-label="anchor" href="#citations"></a>
+</h2>
 <ul>
-<li>Hong, C., Rush, E., Liu, M. et al. Clinical knowledge extraction via sparse embedding regression (KESER) with multi-center large scale electronic health record data. npj Digit. Med. 4, 151 (2021). <a href="https://doi.org/10.1038/s41746-021-00519-z" class="uri">https://doi.org/10.1038/s41746-021-00519-z</a>
+<li>Hong, C., Rush, E., Liu, M. et al. Clinical knowledge extraction via sparse embedding regression (KESER) with multi-center large scale electronic health record data. npj Digit. Med. 4, 151 (2021). <a href="https://doi.org/10.1038/s41746-021-00519-z" class="external-link uri">https://doi.org/10.1038/s41746-021-00519-z</a>
 </li>
 </ul>
 </div>
@@ -109,29 +111,38 @@
 
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <div class="links">
-<h2>Links</h2>
+<h2 data-toc-skip>Links</h2>
 <ul class="list-unstyled">
-<li>Browse source code at <br><a href="https://github.com/celehs/kesernetwork/">https://​github.com/​celehs/​kesernetwork/​</a>
-</li>
-<li>Report a bug at <br><a href="https://github.com/celehs/kesernetwork/issues">https://​github.com/​celehs/​kesernetwork/​issues</a>
-</li>
+<li><a href="https://cloud.r-project.org/package=kesernetwork" class="external-link">View on CRAN</a></li>
+<li><a href="https://github.com/celehs/kesernetwork/" class="external-link">Browse source code</a></li>
+<li><a href="https://github.com/celehs/kesernetwork/issues" class="external-link">Report a bug</a></li>
 </ul>
 </div>
+
 <div class="license">
-<h2>License</h2>
+<h2 data-toc-skip>License</h2>
 <ul class="list-unstyled">
 <li><a href="LICENSE.html">Full license</a></li>
 <li><small>GPL (&gt;= 3)</small></li>
 </ul>
 </div>
+
 <div class="community">
-<h2>Community</h2>
+<h2 data-toc-skip>Community</h2>
 <ul class="list-unstyled">
 <li><a href="CODE_OF_CONDUCT.html">Code of conduct</a></li>
 </ul>
 </div>
+
+<div class="citation">
+<h2 data-toc-skip>Citation</h2>
+<ul class="list-unstyled">
+<li><a href="authors.html#citation">Citing kesernetwork</a></li>
+</ul>
+</div>
+
 <div class="developers">
-<h2>Developers</h2>
+<h2 data-toc-skip>Developers</h2>
 <ul class="list-unstyled">
 <li>Su-Chun Cheng <br><small class="roles"> Maintainer, author </small>  </li>
 <li>PARSE LTD <br><small class="roles"> Author </small>  </li>
@@ -141,22 +152,25 @@
 </ul>
 </div>
 
-  <div class="dev-status">
-<h2>Dev status</h2>
+<div class="dev-status">
+<h2 data-toc-skip>Dev status</h2>
 <ul class="list-unstyled">
-<li><a href="https://lifecycle.r-lib.org/articles/stages.html#experimental"><img src="https://img.shields.io/badge/lifecycle-experimental-orange.svg" alt="Lifecycle: experimental"></a></li>
+<li><a href="https://lifecycle.r-lib.org/articles/stages.html#experimental" class="external-link"><img src="https://img.shields.io/badge/lifecycle-experimental-orange.svg" alt="Lifecycle: experimental"></a></li>
 </ul>
 </div>
-</div>
+
+  </div>
 </div>
 
 
       <footer><div class="copyright">
-  <p>Developed by Su-Chun Cheng, PARSE LTD, VA CIPHER, Verity Research, CELEHS.</p>
+  <p></p>
+<p>Developed by Su-Chun Cheng, PARSE LTD, VA CIPHER, Verity Research, CELEHS.</p>
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.1.</p>
+  <p></p>
+<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.7.</p>
 </div>
 
       </footer>
@@ -164,6 +178,8 @@
 
   
 
+
+  
 
   </body>
 </html>
