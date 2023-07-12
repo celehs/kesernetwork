@@ -13,6 +13,7 @@ app_ui <- function(request) {
     # Your application UI logic 
     shinydashboardPlus::dashboardPage(
       shinydashboardPlus::dashboardHeader(
+        uiOutput("toVA"), 
       title = "KESER Network",
       leftUi = mod_header_ui("headerBtn"),
       titleWidth = "310pt",
@@ -51,21 +52,21 @@ app_ui <- function(request) {
                style = "margin-right: 5px;"),
       uiOutput("ui_table"),
       div(
-        # checkboxGroupInput("inCheckboxGroup2", "0 node(s) Selected:"),
-        checkboxGroupInput("inCheckboxGroup2", "5 nodes selected:",
-          choiceValues = c("PheCode:008.5", "PheCode:008.6", "PheCode:008.7",
-                           "PheCode:010", "PheCode:031"),
-          choiceNames = c(
-            "PheCode:008.5: bacterial enteritis",
-            "PheCode:008.6: viral enteritis",
-            "PheCode:008.7: intestinal infection due to protozoa",
-            "PheCode:010: tuberculosis",
-            "PheCode:031: diseases due to other mycobacteria"
-          ),
-          selected = c("PheCode:008.5", "PheCode:008.6", "PheCode:008.7",
-                       "PheCode:010", "PheCode:031"),
-          width = "100%"
-        ),
+        checkboxGroupInput("inCheckboxGroup2", "0 node(s) Selected:"),
+        # checkboxGroupInput("inCheckboxGroup2", "5 nodes selected:",
+        #   choiceValues = c("PheCode:008.5", "PheCode:008.6", "PheCode:008.7",
+        #                    "PheCode:010", "PheCode:031"),
+        #   choiceNames = c(
+        #     "PheCode:008.5: bacterial enteritis",
+        #     "PheCode:008.6: viral enteritis",
+        #     "PheCode:008.7: intestinal infection due to protozoa",
+        #     "PheCode:010: tuberculosis",
+        #     "PheCode:031: diseases due to other mycobacteria"
+        #   ),
+        #   selected = c("PheCode:008.5", "PheCode:008.6", "PheCode:008.7",
+        #                "PheCode:010", "PheCode:031"),
+        #   width = "100%"
+        # ),
         id = "divcheckboxgroups"
       ),
           div(

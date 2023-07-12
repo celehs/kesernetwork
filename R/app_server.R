@@ -7,7 +7,7 @@
 #' @import shinyBS
 #' @import rintrojs
 #' @noRd
-app_server <- function(Rdata_path){
+app_server <- function(Rdata_path, Uniq_id){
   
   server <- function(input, output, session) {
     if(isTruthy(Rdata_path)){
@@ -58,10 +58,46 @@ app_server <- function(Rdata_path){
     
     method <- reactive({ input$selectmethod })
     
-    selected_rows <- reactive({df_input()$nodeID[input$df_table_rows_selected]})
+    url_vars <- reactive({ session$clientData$url_search })
     
-    selected_nodes <- eventReactive(input$goButton, {
-      input$inCheckboxGroup2
+    uniq_id <- reactive({
+      if(!is.null(Uniq_id)){
+        readr::read_csv(Uniq_id, col_types = "cc")
+      }
+    })
+    
+    url_node <- reactive({
+      if(grepl('uqid=', url_vars())){
+        id = gsub(".+?uqid=(.+)", "\\1", url_vars(), perl = TRUE)
+        id = strsplit(id, "&")[[1]]
+        print(id)
+        print(id %in% colnames(CosMatrix()))
+        print("url_node")
+        print(id)
+        print(uniq_id())
+        print(uniq_id()$id[uniq_id()$uqid == id])
+        if ((id %in% colnames(CosMatrix()))[1]) {
+          id
+        } else if(!is.null(uniq_id())){
+          if((id %in% uniq_id()$uqid)[1]){
+            uniq_id()$id[uniq_id()$uqid == id]
+          }
+        }
+      }
+    })
+    
+    selected_nodes <- eventReactive(input$gobutton, {
+      print(url_node())
+      if(!isTruthy(input$gobutton)){
+        if(isTruthy(url_node())){
+          url_node()
+        } else {
+          c("PheCode:008.5", "PheCode:008.6", "PheCode:008.7",
+            "PheCode:010", "PheCode:031")
+      }}
+        else{
+        input$inCheckboxGroup2
+      }
     }, ignoreNULL = FALSE)
     
     cluster <- eventReactive(input$goButton, {
@@ -122,6 +158,12 @@ app_server <- function(Rdata_path){
       
     })
     
+    selected_rows = reactive({
+      if(!isTruthy(input$goButton)){
+        c(1,4:7)
+      }
+    })
+    
     output$df_table <- DT::renderDT(DT::datatable({
       df_input()[, c(1:2, 5)]
     }, rownames = FALSE,
@@ -132,7 +174,7 @@ app_server <- function(Rdata_path){
       dom = "Bfrtip"
     ),
     selection = list(mode = 'multiple', 
-                     selected = c(1,4:7), 
+                     selected = selected_rows(), 
                      target = 'row'),
     escape = FALSE
     ) %>%
@@ -351,6 +393,30 @@ app_server <- function(Rdata_path){
       
     })
     
+    observeEvent(url_node(), {
+      print("url_node()")
+      print(url_node())
+      print(isTruthy(url_node()))
+      if(isTruthy(url_node())){
+        print("reset")
+        
+        if (input$sidebar) {
+          shinydashboardPlus::updateSidebar("sidebar", session = session)
+        }
+        
+        DT::reloadData(
+          proxy,
+          resetPaging = TRUE,
+          clearSelection = c("all"))
+        
+        x <- character(0)
+        updateCheckboxGroupInput(session, "inCheckboxGroup2",
+                                 "0 node(s) selected",
+                                 choices = x,
+                                 selected = x)
+      }
+    })
+    
     proxy <- DT::dataTableProxy('df_table')
     
     observeEvent(input$selectmethod, {
@@ -486,6 +552,33 @@ app_server <- function(Rdata_path){
                ), 
                height = winsize()[2] - 450)
     })
+    
+    
+    # btn back to VA ====
+    
+    observeEvent(selected_nodes(), {
+      if ((selected_nodes() %in% url_node())[1]) {
+        uqid <- uniq_id()$uqid[uniq_id()$id == selected_nodes()]
+        # href <- paste0("https://phenomics-dev.va.ornl.gov/cipher/phenotype-viewer?uqid=", uqid)
+        href <- paste0("https://celehs.hms.harvard.edu/DEMO/CIPHER_VA/", uqid)
+        output$toVA <- renderUI({
+          actionButton(
+            inputId = "tova", class = "btn btn-warning header-button",
+            icon = icon("share"),
+            style = "padding: 6px 20px 6px 20px; margin: 7.5px 7.5px 0 0",
+            title = "Link back to CIPHER.",
+            tags$a("View in CIPHER", href = href, target = "_blank", style = "text-docoration: none;
+	color: white;")
+          )
+        })
+      } else {
+        output$toVA <- renderUI({
+          ""
+        })
+      }
+    })
+    
+    
   }
   return(server)
 }

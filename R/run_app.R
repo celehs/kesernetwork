@@ -14,16 +14,17 @@
 #' @importFrom golem with_golem_options 
 run_app <- function(
   Rdata_path = NULL,
+  Uniq_id = NULL,
   onStart = NULL,
   options = list(), 
-  enableBookmarking = "server",
+  enableBookmarking = "url",
   uiPattern = "/",
   ...
 ) {
   with_golem_options(
     app = shinyApp(
       ui = app_ui,
-      server = app_server(Rdata_path),
+      server = app_server(Rdata_path, Uniq_id),
       onStart = onStart,
       options = options, 
       enableBookmarking = enableBookmarking, 
