@@ -62,7 +62,7 @@ app_server <- function(Rdata_path, Uniq_id){
     
     uniq_id <- reactive({
       if(!is.null(Uniq_id)){
-        read.csv(Uniq_id, header = TRUE, colClasses = c("character", "character"))
+        utils::read.csv(Uniq_id, header = TRUE, colClasses = c("character", "character"))
       }
     })
     

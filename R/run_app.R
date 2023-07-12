@@ -1,6 +1,7 @@
 #' Run the Shiny Application
 #'
 #' @param Rdata_path path to Rdata files.
+#' @param Uniq_id path to Uniq_id files. csv is needed.
 #' @param ... arguments to pass to golem_opts. 
 #' See `?golem::get_golem_options` for more details.
 #' @inheritParams shiny::shinyApp
@@ -17,7 +18,7 @@ run_app <- function(
   Uniq_id = NULL,
   onStart = NULL,
   options = list(), 
-  enableBookmarking = "url",
+  enableBookmarking = "server",
   uiPattern = "/",
   ...
 ) {
