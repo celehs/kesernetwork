@@ -556,20 +556,23 @@ app_server <- function(Rdata_path, Uniq_id){
     
     # btn back to VA ====
     
-    observeEvent(selected_nodes(), {
-      if ((selected_nodes() %in% url_node())[1]) {
-        uqid <- uniq_id()$uqid[uniq_id()$id == selected_nodes()]
+    observeEvent(node_id(), {
+      if ((node_id() %in% url_node())[1]) {
+        uqid <- uniq_id()$uqid[uniq_id()$id == node_id()]
         # href <- paste0("https://phenomics-dev.va.ornl.gov/cipher/phenotype-viewer?uqid=", uqid)
         href <- paste0("https://celehs.hms.harvard.edu/DEMO/CIPHER_VA/", uqid)
         output$toVA <- renderUI({
-          actionButton(
-            inputId = "tova", class = "btn btn-warning header-button",
-            icon = icon("share"),
-            style = "padding: 6px 20px 6px 20px; margin: 7.5px 7.5px 0 0",
-            title = "Link back to CIPHER.",
-            tags$a("View in CIPHER", href = href, target = "_blank", style = "text-docoration: none;
-	color: white;")
-          )
+          
+          actionButton("tova",
+                       class = "btn-primary active", width = "157px",
+                       icon = icon("share"),
+                       title = "Link back to CIPHER.",
+                       tags$a("View in CIPHER", 
+                              href = href, 
+                              target = "_blank"))
+          
+          
+          
         })
       } else {
         output$toVA <- renderUI({

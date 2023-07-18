@@ -13,7 +13,7 @@ app_ui <- function(request) {
     # Your application UI logic 
     shinydashboardPlus::dashboardPage(
       shinydashboardPlus::dashboardHeader(
-        uiOutput("toVA"), 
+        
       title = "KESER Network",
       leftUi = mod_header_ui("headerBtn"),
       titleWidth = "310pt",
@@ -111,6 +111,8 @@ app_ui <- function(request) {
             uiOutput("ui_addbutton"),
             uiOutput("ui_moreinfo"),
             div(uiOutput("tophecodemap"), 
+                align = "center", style = "margin-top: 5px;"),
+            div(uiOutput("toVA"), 
                 align = "center", style = "margin-top: 5px;")
           )
         ),
