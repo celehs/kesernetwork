@@ -62,20 +62,15 @@ app_server <- function(Rdata_path, Uniq_id, url_va, url_phe){
     
     uniq_id <- reactive({
       if(!is.null(Uniq_id)){
-        utils::read.csv(Uniq_id, header = TRUE, colClasses = c("character", "character"))
-      }
+        # utils::read.csv(Uniq_id, header = TRUE, colClasses = c("character", "character"))
+        getUqid(data.table::fread(Uniq_id))
+        }
     })
     
     url_node <- reactive({
       if(grepl('uqid=', url_vars())){
         id = gsub(".+?uqid=(.+)", "\\1", url_vars(), perl = TRUE)
         id = strsplit(id, "&")[[1]]
-        print(id)
-        print(id %in% colnames(CosMatrix()))
-        print("url_node")
-        print(id)
-        print(uniq_id())
-        print(uniq_id()$id[uniq_id()$uqid == id])
         if ((id %in% colnames(CosMatrix()))[1]) {
           id
         } else if(!is.null(uniq_id())){
@@ -124,7 +119,6 @@ app_server <- function(Rdata_path, Uniq_id, url_va, url_phe){
     
     CosMatrix <- reactive({
       req(Rdata_path)
-      print(dim(cos.list[[method()]]))
       cos.list[[method()]] 
     })
     
@@ -208,9 +202,6 @@ app_server <- function(Rdata_path, Uniq_id, url_va, url_phe){
     # network ====
     
     output$network <- renderUI({
-      print("network")
-      print(paste("!isTruthy(input$goButton)", !isTruthy(input$goButton)))
-      print(selected_nodes())
       if (isTruthy(Rdata_path) & (length(selected_nodes()) > 0)) {
         # req(controls())
         req(winsize()[2])
@@ -381,8 +372,6 @@ app_server <- function(Rdata_path, Uniq_id, url_va, url_phe){
     })
     
     observeEvent(input$deselect, {
-      print("input$deselect")
-      
       DT::reloadData(
         proxy,
         resetPaging = TRUE,
@@ -397,12 +386,7 @@ app_server <- function(Rdata_path, Uniq_id, url_va, url_phe){
     })
     
     observeEvent(url_node(), {
-      print("url_node()")
-      print(url_node())
-      print(isTruthy(url_node()))
       if(isTruthy(url_node())){
-        print("reset")
-        
         if (input$sidebar) {
           shinydashboardPlus::updateSidebar("sidebar", session = session)
         }
@@ -423,7 +407,6 @@ app_server <- function(Rdata_path, Uniq_id, url_va, url_phe){
     proxy <- DT::dataTableProxy('df_table')
     
     observeEvent(input$selectmethod, {
-      print("input$selectmethod")
       
       DT::reloadData(
         proxy,
@@ -574,8 +557,6 @@ app_server <- function(Rdata_path, Uniq_id, url_va, url_phe){
                               href = href, 
                               target = "_blank"))
           
-          
-          
         })
       } else {
         output$toVA <- renderUI({
@@ -583,6 +564,22 @@ app_server <- function(Rdata_path, Uniq_id, url_va, url_phe){
         })
       }
     })
+    
+    # read uqid file ====
+    
+    getUqid <- function(df){
+      df_uqid <- NULL
+      for (i in 1:ncol(df)){
+        if(sum(!grepl("^[A-Za-z0-9]+$", df[[i]])) == 0){
+          df_uqid$uqid <- as.character(df[[i]])
+        } else if(sum(!grepl("^[\\w\\:\\.\\-]+$", df[[i]], perl = TRUE)) == 0){
+          df_uqid$id <- df[[i]]
+          df_uqid$id[grepl("_", df_uqid$id)] <- gsub("Phe_", "PheCode:", df_uqid$id[grepl("_", df_uqid$id)])
+          df_uqid$id[grepl("_", df_uqid$id)] <- gsub("_", ".", df_uqid$id[grepl("_", df_uqid$id)])
+        }
+      }
+      df_uqid
+    }
     
     
   }

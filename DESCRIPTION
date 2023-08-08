@@ -1,6 +1,6 @@
 Package: kesernetwork
 Title: Visualization of the KESER Network
-Version: 0.1.0.9000
+Version: 0.1.0.9001
 Authors@R: c(
     person("Su-Chun", "Cheng", email = "scheng@parse-health.org", role = c('cre', 'aut')),
     person("PARSE LTD", email = "software@parse-health.org", role = c('aut')),
