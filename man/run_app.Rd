@@ -7,6 +7,8 @@
 run_app(
   Rdata_path = NULL,
   Uniq_id = NULL,
+  url_va = NULL,
+  url_phe = NULL,
   onStart = NULL,
   options = list(),
   enableBookmarking = "server",
@@ -18,6 +20,10 @@ run_app(
 \item{Rdata_path}{path to Rdata files.}
 
 \item{Uniq_id}{path to Uniq_id files. csv is needed.}
+
+\item{url_va}{url for va.}
+
+\item{url_phe}{url for phe.}
 
 \item{onStart}{A function that will be called before the app is actually run.
 This is only needed for \code{shinyAppObj}, since in the \code{shinyAppDir}

@@ -7,7 +7,7 @@
 #' @import shinyBS
 #' @import rintrojs
 #' @noRd
-app_server <- function(Rdata_path, Uniq_id){
+app_server <- function(Rdata_path, Uniq_id, url_va, url_phe){
   
   server <- function(input, output, session) {
     if(isTruthy(Rdata_path)){
@@ -86,9 +86,8 @@ app_server <- function(Rdata_path, Uniq_id){
       }
     })
     
-    selected_nodes <- eventReactive(input$gobutton, {
-      print(url_node())
-      if(!isTruthy(input$gobutton)){
+    selected_nodes <- eventReactive(input$goButton, {
+      if(!isTruthy(input$goButton)){
         if(isTruthy(url_node())){
           url_node()
         } else {
@@ -102,16 +101,17 @@ app_server <- function(Rdata_path, Uniq_id){
     
     cluster <- eventReactive(input$goButton, {
       input$cluster
-    }, ignoreNULL = FALSE
-    )
+    }, ignoreNULL = FALSE)
     
     hide_labels <- eventReactive(input$goButton, {
-      input$hide_labels
-    }, ignoreNULL = FALSE
-    )
+      if(!isTruthy(input$goButton) & isTruthy(url_node())){
+          FALSE
+      } else {
+        input$hide_labels
+      }
+    }, ignoreNULL = FALSE)
     
     node_id <- reactive({
-      req(input$current_node_id)
       if (is.character(input$current_node_id$nodes[[1]])){
         if(strsplit(input$current_node_id$nodes[[1]], ":", fixed = TRUE)[[1]][1] == "cluster"){
           NULL
@@ -159,9 +159,9 @@ app_server <- function(Rdata_path, Uniq_id){
     })
     
     selected_rows = reactive({
-      if(!isTruthy(input$goButton)){
-        c(1,4:7)
-      }
+        if(!isTruthy(url_node())){
+          c(1,4:7)
+        } 
     })
     
     output$df_table <- DT::renderDT(DT::datatable({
@@ -208,6 +208,9 @@ app_server <- function(Rdata_path, Uniq_id){
     # network ====
     
     output$network <- renderUI({
+      print("network")
+      print(paste("!isTruthy(input$goButton)", !isTruthy(input$goButton)))
+      print(selected_nodes())
       if (isTruthy(Rdata_path) & (length(selected_nodes()) > 0)) {
         # req(controls())
         req(winsize()[2])
@@ -464,7 +467,7 @@ app_server <- function(Rdata_path, Uniq_id){
     observeEvent(node_id(), {
       if (node_id() %in% phecode$Phecode) {
         phe_id <- gsub(".+:", "", node_id(), perl = TRUE)
-        href <- paste0("https://shiny.parse-health.org/phecodemap/?phecode=", phe_id)
+        href <- paste0(url_phe, phe_id)
         output$tophecodemap <- renderUI({
           actionButton(
             inputId = "tomap", class = "btn-primary", width = "157px",
@@ -557,10 +560,10 @@ app_server <- function(Rdata_path, Uniq_id){
     # btn back to VA ====
     
     observeEvent(node_id(), {
-      if ((node_id() %in% url_node())[1]) {
+      if ((node_id() %in% uniq_id()$id)[1]) {
         uqid <- uniq_id()$uqid[uniq_id()$id == node_id()]
         # href <- paste0("https://phenomics-dev.va.ornl.gov/cipher/phenotype-viewer?uqid=", uqid)
-        href <- paste0("https://celehs.hms.harvard.edu/DEMO/CIPHER_VA/", uqid)
+        href <- paste0(url_va, uqid)
         output$toVA <- renderUI({
           
           actionButton("tova",
