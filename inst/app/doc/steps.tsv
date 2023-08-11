@@ -6,9 +6,9 @@ step	element	intro	position	title
 5	#div_checkbox	Show/Hide the labels in the network.	right	Step4
 6	#goButton	Confirm submission.	right	Step5
 7	#deselect	Clear all selected nodes.	right	Deselect
-8	#network	Main page of the network.<br/>- Click/hover on a node to see the details.<br/>- Scroll to zoom in and out.<br/>- Legend's in the right box.	bottom-left_aligned	Network
+8	#network	Main page of the network.<br/>- Click/hover on a node to see the details.<br/>- Scroll to zoom in and out.<br/>- Legend in the right box.	bottom-left_aligned	Network
 9	.sidebar-toggle	Collapse/expand the sidebar.	left	Collapse sidebar
-10	#controls	Controls of the network: <br/>- Set the layout of the network.<br/>- Selete a node to focus on.<br/>- Set the zoomlevel.<br/>- Set the height for network graph.	bottom	Controls
+10	#controls	Controls of the network: <br/>- Set the layout of the network.<br/>- Select a node to focus on.<br/>- Set the zoomlevel.<br/>- Set the height for network graph.	bottom	Controls
 11	#headerBtn-downloadData	Download the data of the candidate nodes.	bottom	Download
 12	#headerBtn-bookmark	Bookmark this application's state and get a URL for sharing.	bottom	Bookmark
 13	#headerBtn-instruct	Overview of the KESER App.	bottom	About

@@ -10,7 +10,7 @@ The current version of the KESER network only allows PheCodes or RxNorm codes as
 
 ### Using the app
 
-This tool allows to infer relatedness among diseases, treatment, procedures and laboratory measurements. By performing KESER across all PheCode and RxNorm, we create a knowledge map to help identify and visualize :
+This tool allows the user to infer relatedness among diseases, treatment, procedures and laboratory measurements. By performing KESER across all PheCode and RxNorm, we create a knowledge map to help identify and visualize :
 
 - the node-wise relationship between a **target code** (currently only PheCode or RxNorm can be a target node) and its **neighborhood codes** (PheCode, RxNorm, Procedure codes and Labs)
 
