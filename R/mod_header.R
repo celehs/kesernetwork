@@ -30,7 +30,7 @@ mod_header_ui <- function(id){
                  title = "The introduction of the app."
     ),
     actionButton(ns("help"), " Tutorial",
-                 icon = icon("question"),
+                 # icon = icon("question"),
                  class = "btn btn-primary header-button",
                  width = "100px",
                  style = "padding: 6px 20px 6px 20px;",
