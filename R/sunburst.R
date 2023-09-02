@@ -121,8 +121,13 @@ sunburstPlot <- function(thr_cos,
                         insidetextorientation=tolower(rotatelabel),
                         width = scale_sungh,
                         marker = list(colors = df$color),
-                        height =  scale_sungh)%>%
-          plotly::layout(autosize = F, margin = m)
+                        height =  scale_sungh) %>%
+          plotly::layout(autosize = F, margin = m) %>%
+          plotly::config(
+            toImageButtonOptions = list(
+              format = "svg",
+              filename = paste0("barplot_", paste(node_name, collapse = "_"))
+            ))
         
     }else{
       plotly::plot_ly(data = data.frame("ids"=c(),"labels"=c(),"parents"=c(),"text"=c(),
