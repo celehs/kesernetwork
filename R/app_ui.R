@@ -13,7 +13,7 @@ app_ui <- function(request) {
     # Your application UI logic 
     shinydashboardPlus::dashboardPage(
       shinydashboardPlus::dashboardHeader(
-        
+        uiOutput("btn_screenshot"),
       title = "KESER Network",
       leftUi = mod_header_ui("headerBtn"),
       titleWidth = "310pt",

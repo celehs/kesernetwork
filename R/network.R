@@ -88,18 +88,6 @@ add_attr_network <- function(p, layout = "layout_nicely"){
     visNetwork::visEdges(physics = FALSE,
     smooth = FALSE,
     hoverWidth = 2.5) %>%
-    visNetwork::visOptions(
-      highlightNearest = list(
-      enabled = TRUE,
-      degree = 1,
-      hover = FALSE,
-      hideColor = "rgba(200,200,200,0)"),
-      selectedBy = list(`variable` = c("select_group"),
-                        `multiple` = TRUE,
-                        `highlight` = FALSE,
-                        `hideColor` = "rgba(200,200,200,0)",
-                        `main` = "Select by group"),
-      collapse = FALSE) %>%
     visNetwork::visInteraction(hover = TRUE) %>%
     visNetwork::visIgraphLayout(layout = layout,
                     physics = FALSE,
@@ -109,17 +97,17 @@ add_attr_network <- function(p, layout = "layout_nicely"){
                     Shiny.onInputChange('current_node_id', nodes);
                     ;}") %>%
     visNetwork::visLayout(randomSeed = 10) # to have always the same network
-}
+  }
 
 
-plot_network <- function(s, draw.data, hide_label, CosMatrix, dict.combine, attrs, layout = "layout_nicely"){
+plot_network <- function(s, draw.data, hide_label, CosMatrix, dict.combine, attrs, tempHtml, layout = "layout_nicely"){
 
   selected_nodes = s[1:min(50,length(s))]
-    root.node = match(selected_nodes, rownames(CosMatrix))
-    df_edges = draw.data[[1]]
-    df_nodes = draw.data[[2]]
-    df_groups = draw.data[[3]]
-    if(nrow(df_edges) > 0){
+  root.node = match(selected_nodes, rownames(CosMatrix))
+  df_edges = draw.data[[1]]
+  df_nodes = draw.data[[2]]
+  df_groups = draw.data[[3]]
+  if(nrow(df_edges) > 0){
     if(hide_label){
       df_nodes$label <- "        "
       df_nodes$font.size[df_nodes$nodetype == "target"] <- 40
@@ -133,7 +121,32 @@ plot_network <- function(s, draw.data, hide_label, CosMatrix, dict.combine, attr
     }
     
     legend_to_show <- c(5:10)[(attrs$legend_groups$label[5:10] %in% unique(df_nodes$Cap_label[!df_nodes$id %in% colnames(CosMatrix)]))]
-        p <- visNetwork::visNetwork(df_nodes, df_edges, width = "100%",height = "100%") %>%
+        p <- visNetwork::visNetwork(df_nodes, df_edges, width = "100%", height = "100%") 
+        p <- add_attr_network(p, layout)
+        p %>% 
+          visNetwork::visOptions(height = "4000px", width = "4200px") %>%
+          visNetwork::visLegend(addNodes = attrs$legend_groups[c(1:4, legend_to_show, 19),],
+                                addEdges = attrs$legend_edges,
+                                width = 0.1,
+                                position = "right",
+                                useGroups = FALSE,
+                                zoom = TRUE,
+                                stepX = 300,
+                                stepY = 210,
+                                ncol=1) %>%
+          visNetwork::visSave(tempHtml, selfcontained = TRUE, background = "#222d32")
+        p %>%
+        visNetwork::visOptions(highlightNearest = list(
+                                 enabled = TRUE,
+                                 degree = 1,
+                                 hover = FALSE,
+                                 hideColor = "rgba(200,200,200,0)"),
+                               selectedBy = list(`variable` = c("select_group"),
+                                                 `multiple` = TRUE,
+                                                 `highlight` = FALSE,
+                                                 `hideColor` = "rgba(200,200,200,0)",
+                                                 `main` = "Select by group"),
+                               collapse = FALSE) %>%
           visNetwork::visLegend(addNodes = attrs$legend_groups[c(1:4, legend_to_show, 19),],
                                 addEdges = attrs$legend_edges,
                                 width = 0.09,
@@ -143,7 +156,6 @@ plot_network <- function(s, draw.data, hide_label, CosMatrix, dict.combine, attr
                                 stepX = 150,
                                 stepY = 70,
                                 ncol=1)
-        add_attr_network(p, layout)
       # }
     } else {
       print("0 nodes collected")

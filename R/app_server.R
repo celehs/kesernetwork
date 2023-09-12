@@ -235,7 +235,7 @@ app_server <- function(Rdata_path, Uniq_id, url_va, url_phe){
     
     output$network_proxy_nodes <- visNetwork::renderVisNetwork({
       plot_network(selected_nodes(), draw.data(), hide_labels(), 
-                   CosMatrix(), dict.combine, attrs)
+                   CosMatrix(), dict.combine, attrs, tempHtml)
     })
     
     # info for clicked node ====
@@ -580,6 +580,37 @@ app_server <- function(Rdata_path, Uniq_id, url_va, url_phe){
       }
       df_uqid
     }
+    
+    # screenshot ====
+    
+    output$btn_screenshot <- renderUI({
+      # actionButton("tosvg", "Download svg of network", onclick="exportSvg();")
+      downloadButton("downloadImg", "DownloadImage",
+                     class = "btn btn-primary header-button",
+                     width = "100px",
+                     style = "padding: 6px; margin: 7px 10px 0 0;",
+                     title = "To download the png of current network.")
+    })
+    
+    # observeEvent(input$screenshot, {
+    #   shinyscreenshot::screenshot(filename = "network",
+    #                               id = "network_proxy_nodes",
+    #                               scale = 5)
+    # })
+    
+    tempHtml <- file.path(tempdir(),"temp.html")
+    # tempHtml <- "/home/hui/celehs/kesernetwork/test_webshot2.html"
+    
+    output$downloadImg <- downloadHandler(
+      filename = "chart.png",
+      content = function(file) {
+        
+        # saveWidget(req(widget_to_be_saved()),fpt, selfcontained = TRUE)
+        chromote::set_chrome_args("--disable-crash-reporter")
+        webshot2::webshot(url = tempHtml, vheight = 4000,
+                          vwidth = 4200, file = file)
+      }
+    )
     
     
   }
