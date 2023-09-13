@@ -233,9 +233,14 @@ app_server <- function(Rdata_path, Uniq_id, url_va, url_phe){
       }
     })
     
+    network.widget <- reactive({
+      widget_network(draw.data(), input$hide_labels, attrs, CosMatrix(), layout = "layout_nicely" )
+    })
+    
+    
+    
     output$network_proxy_nodes <- visNetwork::renderVisNetwork({
-      plot_network(selected_nodes(), draw.data(), hide_labels(), 
-                   CosMatrix(), dict.combine, attrs, tempHtml)
+      plot_network(network.widget()[[1]], network.widget()[[2]])
     })
     
     # info for clicked node ====
@@ -583,14 +588,10 @@ app_server <- function(Rdata_path, Uniq_id, url_va, url_phe){
     
     # screenshot ====
     
-    output$btn_screenshot <- renderUI({
-      # actionButton("tosvg", "Download svg of network", onclick="exportSvg();")
-      downloadButton("downloadImg", "DownloadImage",
-                     class = "btn btn-primary header-button",
-                     width = "100px",
-                     style = "padding: 6px; margin: 7px 10px 0 0;",
-                     title = "To download the png of current network.")
-    })
+    # output$btn_screenshot <- renderUI({
+    #   
+    #   
+    # })
     
     # observeEvent(input$screenshot, {
     #   shinyscreenshot::screenshot(filename = "network",
@@ -604,11 +605,11 @@ app_server <- function(Rdata_path, Uniq_id, url_va, url_phe){
     output$downloadImg <- downloadHandler(
       filename = "chart.png",
       content = function(file) {
-        
+        save_network(network.widget()[[1]], network.widget()[[2]], tempHtml, width = input$vwidth, height = input$vheight, background = input$background)
         # saveWidget(req(widget_to_be_saved()),fpt, selfcontained = TRUE)
         chromote::set_chrome_args("--disable-crash-reporter")
-        webshot2::webshot(url = tempHtml, vheight = 4000,
-                          vwidth = 4200, file = file)
+        webshot2::webshot(url = tempHtml, vheight = input$vheight,
+                          vwidth = input$vwidth, file = file)
       }
     )
     

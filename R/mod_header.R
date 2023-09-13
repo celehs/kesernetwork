@@ -11,13 +11,18 @@ mod_header_ui <- function(id){
   ns <- NS(id)
   tagList(
     downloadButton(ns("downloadData"),
-                   " Download",
+                   " DownloadData",
                    icon = icon("download"),
                    class = "btn btn-primary header-button",
                    width = "100px",
                    style = "padding: 6px;",
-                   title = "The cosine similarity of current network."
-    ),
+                   title = "The cosine similarity of current network."),
+    actionButton(ns("downloadImg"), "DownloadImage",
+                 icon = icon("download"),
+                 class = "btn btn-primary header-button",
+                 width = "130px",
+                 style = "padding: 6px;",
+                 title = "To download the png of current network."),
     bookmarkButton(
       label = "Bookmark", id = ns("bookmark"),
       class = "btn btn-primary header-button"

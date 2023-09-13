@@ -11,6 +11,7 @@ Description: A shiny app to visualize the knowledge networks for the code concep
 License: GPL (>= 3)
 Imports: 
     chromote,
+    colourpicker,
     config (>= 0.3.1),
     data.table,
     dplyr,

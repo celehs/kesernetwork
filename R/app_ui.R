@@ -168,6 +168,18 @@ app_ui <- function(request) {
         id = "instruction", title = "Instruction", trigger = "headerBtn-instruct",
         size = "large",
         includeMarkdown(app_sys("app/doc/documentation.md"))
+      ),
+      shinyBS::bsModal(
+        id = "bs_downloadimg", title = "Image Download", trigger = "headerBtn-downloadImg",
+        size = "small",
+        numericInput("vwidth", "Width(px):", 4000),
+        numericInput("vheight", "Height(px):", 4000),
+        colourpicker::colourInput("background", "Background color", "#222d32"),
+        downloadButton("downloadImg", "DownloadImage",
+                       class = "btn btn-primary header-button",
+                       width = "100px",
+                       style = "padding: 6px; margin: 7px 10px 0 0;",
+                       title = "To download the png of current network.")
       )
     )
   ),#end dashboardPage
