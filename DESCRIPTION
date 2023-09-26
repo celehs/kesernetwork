@@ -1,4 +1,4 @@
-Package: kesernetwork
+Package: kesernetwork.linkage
 Title: Visualization of the KESER Network
 Version: 0.1.0.9001
 Authors@R: c(

@@ -1,4 +1,4 @@
 library(testthat)
-library(kesernetwork)
+library(kesernetwork.linkage)
 
-test_check("kesernetwork")
+test_check("kesernetwork.linkage")

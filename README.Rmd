@@ -26,28 +26,23 @@ The kesernetwork builds a shiny app to visualize the knowledge networks for the 
 
 ## Installation
 
-Install the released version of kesernetwork from CRAN:
-
-``` r
-install.packages("kesernetwork")
-```
 
 Or install the development version from GitHub with:
 
 ``` r
 install.packages("remotes")
-remotes::install_github("celehs/kesernetwork")
+remotes::install_github("celehs/kesernetwork", repo = "linkage")
 ```
 
 
 
 ## Usage
 
-This is a basic example which shows you how to run the `kesernetwork` app. Remember you need to get access to the data and save it to your local computer. In order to guarantee some dependencies are loaded, you must use `library(kesernetwork)` beforehand, instead of directly running `kesernetwork::run_app()`.
+This is a basic example which shows you how to run the `kesernetwork` app. Remember you need to get access to the data and save it to your local computer. In order to guarantee some dependencies are loaded, you must use `library(kesernetwork.linkage)` beforehand, instead of directly running `kesernetwork.linkage::run_app()`.
 
 
 ```{r eval=FALSE}
-library(kesernetwork)
+library(kesernetwork.linkage)
 run_app(Rdata_path = "path/to/kesernetwork.RData")
 ```
 
