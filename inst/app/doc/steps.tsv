@@ -4,10 +4,10 @@ step	element	intro	position	title
 3	#ui_table	Select some target nodes (green rows) as candidate nodes to display the network.	right	Step2
 4	#inCheckboxGroup2	Screening selected rows for candidate nodes.	right	Step3
 5	#div_checkbox	Show/Hide the labels in the network.	right	Step4
-6	#goButton	Confirm submission.	right	Step5
-7	#deselect	Clear all selected nodes.<br/>- Note: Tool is pre-populated with example, please clear prior to using	right	Deselect
+7	#btns	- <b>Show network</b>: Confirm submission.<br/>- <b>Deselect</b>: Clear all selected nodes.<br/>- <b>Note</b>: Tool is pre-populated with example, please clear prior to using	right	Buttons
 8	#network	Main page of the network.<br/>- Click/hover on a node to see the details.<br/>- Scroll to zoom in and out.<br/>- Legend in the right box.	bottom-left_aligned	Network
 9	.sidebar-toggle	Collapse/expand the sidebar.	left	Collapse sidebar
-10	#headerBtn-downloadData	Download the data of the candidate nodes.	bottom	Download
-11	#headerBtn-bookmark	Bookmark this application's state and get a URL for sharing.	bottom	Bookmark
-12	#headerBtn-instruct	Overview of the KESER App.	bottom	About
+10	#headerBtn-downloadData	Download the data of the candidate nodes.	bottom	DownloadData
+11	#headerBtn-downloadImg	Download the png of the network.	bottom	DownloadImg
+12	#headerBtn-bookmark	Bookmark this application's state and get a URL for sharing.	bottom	Bookmark
+13	#headerBtn-instruct	Overview of the KESER App.	bottom	About

@@ -599,9 +599,8 @@ app_server <- function(Rdata_path, Uniq_id, url_va, url_phe){
     #                               scale = 5)
     # })
     
-    tempHtml <- file.path(tempdir(),"temp.html")
-    # tempHtml <- "/home/hui/celehs/kesernetwork/test_webshot2.html"
-    
+    tempHtml <- file.path(tempdir(), "temp.html")
+
     output$downloadImg <- downloadHandler(
       filename = "chart.png",
       content = function(file) {

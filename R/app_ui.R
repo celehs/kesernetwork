@@ -74,6 +74,7 @@ app_ui <- function(request) {
             id = "div_checkbox"
           ),
       # buttons ====
+      div(
       fluidRow(
         column(6,
                div(
@@ -93,7 +94,7 @@ app_ui <- function(request) {
             class = "btn-success"
           ), align = "left")
         )
-      )
+      ), id = "btns")
     ),
     shinydashboard::dashboardBody(
       windowSizeUI("win"),
