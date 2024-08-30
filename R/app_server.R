@@ -608,6 +608,7 @@ app_server <- function(Rdata_path, Uniq_id, url_va, url_phe){
         # saveWidget(req(widget_to_be_saved()),fpt, selfcontained = TRUE)
         chromote::set_chrome_args("--disable-crash-reporter")
         webshot2::webshot(url = tempHtml, vheight = input$vheight,
+                          cliprect = "viewport", 
                           vwidth = input$vwidth, file = file)
       }
     )
