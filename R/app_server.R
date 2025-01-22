@@ -77,7 +77,7 @@ app_server <- function(Rdata_path){
     node_id <- reactive({
       req(input$current_node_id)
       if (is.character(input$current_node_id$nodes[[1]])){
-        if(strsplit(input$current_node_id$nodes[[1]], ":", fixed = TRUE)[[1]][1] == "cluster"){
+        if(grepl("Group:", input$current_node_id$nodes[[1]])){
           NULL
         }
         else {
@@ -96,7 +96,7 @@ app_server <- function(Rdata_path){
     # DT input table ====
     
     df_input <- reactive({
-      ids <- unique(colnames(CosMatrix()))
+      ids <- unique(c(colnames(CosMatrix()), rownames(CosMatrix()), phecode$Phecode[phecode$missing]))
       ord <- gsub("\\:.+", "", ids, perl = TRUE)
       ord <- factor(ord, levels = c("PheCode", "RXNORM", "ProcedureCode", "LOINC", "ShortName", "Other lab"))
       df <- data.frame(
@@ -166,49 +166,97 @@ app_server <- function(Rdata_path){
     # network ====
     
     getCos <- function(nodes, matrix){
-      if((nodes %in% colnames(matrix))[1]){
-        df <- matrix[, nodes, drop = FALSE]
+      df0 <- NULL
+      if(sum(nodes %in% colnames(matrix)) > 0){
+        df <- matrix[, nodes[nodes %in% colnames(matrix)], drop = FALSE]
         summ <- Matrix::summary(df)
-        data.frame("from" = colnames(df)[summ$j],
-                   "to" = rownames(df)[summ$i],
-                   "weight" = summ$x)
-      } else {
-        df <- matrix[nodes, , drop = FALSE]
-        summ <- Matrix::summary(df)
-        data.frame("from" = rownames(df)[summ$i],
-                   "to" = colnames(df)[summ$j],
-                   "weight" = summ$x)
+        df0 <- rbind(df0, data.frame("from" = colnames(df)[summ$j],
+                                     "to" = rownames(df)[summ$i],
+                                     "weight" = summ$x))
       }
+      if(sum(nodes %in% rownames(matrix)) > 0){
+        df <- matrix[nodes[nodes %in% rownames(matrix)], , drop = FALSE]
+        summ <- Matrix::summary(df)
+        df0 <- rbind(df0, data.frame("from" = rownames(df)[summ$i],
+                                     "to" = colnames(df)[summ$j],
+                                     "weight" = summ$x))
+      }
+      df0[!duplicated(df0), ]
+    }
+    
+    getCosFromChildren  <- function(id, matrix){
+      # id <- "PheCode:790"
+      # matrix <- cos.list[[1]]
+      # id %in% colnames(matrix)
+      # id %in% rownames(matrix)
+      children <- dict.combine$id[gsub("\\..$", "", dict.combine$id, perl = TRUE) %in% id]
+      df <- getCos(children, matrix)
+      # df <- rbind(data.frame(from = id, to = children, weight = 1), df)
+      # df$children <- df$from
+      # df$from <- id
+      df
     }
     
     df_edges <- reactive({
       req(selected_nodes())
-      getCos(selected_nodes(), CosMatrix())
+      df <- getCos(selected_nodes(), CosMatrix())
+      # if(isTruthy(df) && nrow(df) > 0){
+      #   df$children <- NA
+      # }
+      print("df")
+      print(head(df))
+      if(sum(selected_nodes() %in% phecode$Phecode[phecode$missing]) > 0){
+        for(id in selected_nodes()[selected_nodes() %in% phecode$Phecode[phecode$missing]]){
+          df <- rbind(df, getCosFromChildren(id, CosMatrix()))
+        }
+      }
+      df
     })
     
     df_edges_groups <- reactive({
       if(nrow(df_edges())){
         df_filters <- df_edges()
+        df_filters <- df_filters[!duplicated(df_filters), ]
+        center_nodes <- unique(c(selected_nodes(), df_filters$from))
         df_filters$groupid <- dict.combine$groupid[match(df_filters$to, dict.combine$id)]
+        # df_filters$groupid[df_filters$groupid %in% center_nodes | df_filters$to %in% center_nodes] <- NA
         df_filters$center <- df_filters$from
-        df_filters_1 <- df_filters %>%
+        df_filters_0 <- df_filters[df_filters$groupid %in% center_nodes | df_filters$to %in% center_nodes, ]
+        df_filters_1 <- df_filters[!df_filters$to %in% df_filters_0$to, ]
+        groups <- df_filters_1[!duplicated(df_filters_1$to), ] %>%
+          dplyr::group_by(groupid) %>%
+          dplyr::summarise(n = dplyr::n(), tos = paste(unique(to), collapse = ';'))
+        df_filters_1 <- df_filters_1 %>%
           dplyr::group_by(.data$from, .data$groupid, .data$center) %>%
-          dplyr::summarise(weight = max(.data$weight), n = dplyr::n())
-        df_filters_1$to <- df_filters$to[match(df_filters_1$groupid, df_filters$groupid)]
+          dplyr::summarise(weight = max(.data$weight), to = paste(unique(to), collapse = ';'))
+        df_filters_1 <- left_join(df_filters_1, groups, by = c("groupid"))
+        # df_filters_1$to <- df_filters$to[match(df_filters_1$groupid, df_filters$groupid)]
         df_filters_1$to[df_filters_1$n > 1] <- paste0("Group:", df_filters_1$groupid[df_filters_1$n > 1])
-        
+        df_filters_1 <- df_filters_1[, c("from", "to", "weight", "center", "groupid")]
         df_filters_2 <- df_filters[df_filters$groupid %in% df_filters_1$groupid[grepl("Group:", df_filters_1$to)], ]
         df_filters_2$from <- paste0("Group:", df_filters_2$groupid)
         print("dim(df_filters_1)")
         print(dim(df_filters_1))
         print("dim(df_filters_2)")
         print(dim(df_filters_2))
-        df_filters <- rbind(df_filters_1, df_filters_2)
+        df_filters <- rbind(df_filters_1, df_filters_2, df_filters_0)
+        if(sum(selected_nodes() %in% phecode$Phecode[phecode$missing]) > 0){
+          missing_center <- selected_nodes()[selected_nodes() %in% phecode$Phecode[phecode$missing]]
+          children <- unique(df_filters$from[gsub("\\..$", "", df_filters$from, perl = TRUE) %in% missing_center])
+          df_filters_0 <- data.frame(from = missing_center, to = children, weight = 1, groupid = NA, center = missing_center)
+          # df_filters_0$n <- NA
+          df_filters <- rbind(df_filters, df_filters_0)
+        }
         print("dim(df_filters)")
         print(dim(df_filters))
-        # saveRDS(df_filters, "test_df_edges_groups_v20221128.rds")
         df_filters
       }
+    })
+    
+    
+    DF_network <- reactive({
+      req(df_edges_groups())
+      dataNetwork(selected_nodes(), df_edges_groups(), dict.combine, phecode$Phecode[phecode$missing], attrs)
     })
     
     output$network <- renderUI({
@@ -236,59 +284,46 @@ app_server <- function(Rdata_path){
     
     
     output$network_proxy_nodes <- visNetwork::renderVisNetwork({
-      plot_network(df_edges_groups(), colnames(CosMatrix()), hide_labels(), 
-                   dict.combine, attrs)
+      plot_network(DF_network(), hide_labels(), attrs)
     })
     
-    # info for clicked node ====
     
-    observeEvent(input$current_node_id$nodes[[1]], {
-      if(strsplit(input$current_node_id$nodes[[1]], ":", fixed = TRUE)[[1]][1] == "cluster"){
-        toggleModal(session, "selectedcluster", toggle = "open")
-      } else {
-        toggleModal(session, "selectednode", toggle = "open")
+    selected_id = reactive(
+      if(length(input$current_node_id$nodes) > 0){
+        print(input$current_node_id$nodes)
+        input$current_node_id$nodes[[1]]
+      }
+    )
+    
+    myVisProxy = visNetwork::visNetworkProxy("network_proxy_nodes")
+    
+    ## hidden ====
+    observeEvent(selected_id(),{
+      if(!is.null(selected_id()) && selected_id() != ""){
+        if(grepl("Group:", selected_id())){
+          print("selected_id()")
+          print(selected_id())
+          df_edges = DF_network()[[1]]
+          df_nodes = DF_network()[[2]]
+          # saveRDS(df, "test_DF_network.rds")
+          df_nodes$hidden[df_nodes$id %in% df_edges$to[df_edges$from %in% selected_id()]] = FALSE
+          visNetwork::visUpdateNodes(myVisProxy, nodes = df_nodes)
+        } else {
+          toggleModal(session, "selectednode", toggle = "open")
+        }
       }
     })
     
     output$clicked_node_info <- renderUI({
+      print("clicked_node_info")
+      print(node_id())
       clickedNodeText(node_id(), dict.combine)
     })
     
     
-    # info for clicked group ====
-    
-    selected_group <- reactive({
-      if (!is.null(input$current_node_id$nodes[[1]])){
-        selected_group <- strsplit(input$current_node_id$nodes[[1]], ":", fixed = TRUE)[[1]][2]
-      }
-    })
-    
-    output$ui_selectedcluster <- renderUI({
-      bsModal(
-        id = "selectedcluster", title = paste("Group: ", selected_group()), 
-        trigger = FALSE,
-        size = "large",
-        uiOutput("clusterinfor")
-      )
-    })
-    
-    output$clusterinfor <- renderUI({
-      reactable::reactableOutput("tb_selectedgroup")
-    })
-    
-    output$tb_selectedgroup <- reactable::renderReactable({
-      df_nodes <- draw.data()[[2]]
-      df_cluster <- df_nodes[df_nodes$group == selected_group(), c("id", "label", "title")]
-      reactable::reactable(df_cluster[, 1:2], 
-                details = function(index) {
-                  title <- df_cluster[index, "title", drop = FALSE]
-                  DT::datatable(title, escape = FALSE, rownames = FALSE, 
-                            options = list(dom = "t", ordering = FALSE), 
-                            width = "100%", height = "200px")
-                })
-    })
-    
     df_clicked <- reactive({
+      print("df_clicked")
+      print(node_id())
       getCos(node_id(), CosMatrix())
     })
     
@@ -411,20 +446,24 @@ app_server <- function(Rdata_path){
     # more info button ====
     
     observeEvent(node_id(), {
-      cap <- dict.combine$category[dict.combine$id == node_id()]
-      href = switch(match(cap, c("Procedure", "Lab", "Disease", "Drug")), 
-                    "https://hcup-us.ahrq.gov/toolssoftware/ccs_svcsproc/ccssvcproc.jsp",
-                    "https://loinc.org/multiaxial-hierarchy/",
-                    "https://phewascatalog.org/phecodes_icd10cm",
-                    "https://mor.nlm.nih.gov/RxNav/")
-      output$ui_moreinfo <- renderUI({
-        div(actionButton("infoButton",
-                         class = "btn-primary active", width = "157px",
-                         tags$a("More information", 
-                                href = href, 
-                                target = "_blank")
-        ), align = "center", style = "margin-top: 5px;")
-      })
+      print("info button")
+      print(node_id())
+      if(isTruthy(node_id())){
+        cap <- dict.combine$category[dict.combine$id == node_id()]
+        href = switch(match(cap, c("Procedure", "Lab", "Disease", "Drug")), 
+                      "https://hcup-us.ahrq.gov/toolssoftware/ccs_svcsproc/ccssvcproc.jsp",
+                      "https://loinc.org/multiaxial-hierarchy/",
+                      "https://phewascatalog.org/phecodes_icd10cm",
+                      "https://mor.nlm.nih.gov/RxNav/")
+        output$ui_moreinfo <- renderUI({
+          div(actionButton("infoButton",
+                           class = "btn-primary active", width = "157px",
+                           tags$a("More information", 
+                                  href = href, 
+                                  target = "_blank")
+          ), align = "center", style = "margin-top: 5px;")
+        })
+      }
     })
     
     

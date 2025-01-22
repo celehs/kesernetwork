@@ -1,6 +1,6 @@
 #' @importFrom visNetwork %>%
 
-dataNetwork <- function(target_nodes, df_edges, dict.combine, attrs){
+dataNetwork <- function(selected_nodes, df_edges, dict.combine, missing_nodes, attrs){
   if(!is.null(df_edges)){
     # saveRDS(df_edges, "df_edges.rds")
     attr_edges <- attrs$attr_edges
@@ -10,6 +10,7 @@ dataNetwork <- function(target_nodes, df_edges, dict.combine, attrs){
     center_nodes <- unique(df_edges$center)
     df_edges$length <- abs(df_edges$weight * 1000)
     df_edges$title <- paste0(df_edges$center, "->", df_edges$to, ": ", round(df_edges$weight, 3))
+    # df_edges$title[!is.na(df_edges$children)] <- paste0(df_edges$children[!is.na(df_edges$children)], "->", df_edges$to[!is.na(df_edges$children)], ": ", round(df_edges$weight[!is.na(df_edges$children)], 3))
     df_edges <- df_edges %>% dplyr::group_by(from, to) %>%
       dplyr::summarise(groupid = unique(groupid),
                        weight = paste(weight, collapse = "|"),
@@ -19,6 +20,8 @@ dataNetwork <- function(target_nodes, df_edges, dict.combine, attrs){
     df_edges$edgetype[df_edges$from %in% center_nodes &
                         df_edges$to %in% center_nodes ] <- "target-target"
     df_edges <- left_join(df_edges, attr_edges, by = "edgetype")
+    df_edges$dashes <- FALSE
+    df_edges$dashes[df_edges$from %in% missing_nodes] <- TRUE
     
     df_nodes <- data.frame(id = unique(c(df_edges$from, df_edges$to)))
     df_nodes <- left_join(df_nodes, dict.combine, by = c("id"))
@@ -73,6 +76,12 @@ dataNetwork <- function(target_nodes, df_edges, dict.combine, attrs){
     # df_nodes$shape[!df_nodes$id %in% target_nodes] <- "square"
     df_nodes$shape[df_nodes$id %in% paste0("Group:", dict.combine$groupid)] <- "ellipse"
     df_nodes$shape[df_nodes$nodetype == "target"] <- "star"
+    
+    
+    df_nodes$color.border[df_nodes$id %in% missing_nodes] <- "red"
+    df_nodes$opacity[df_nodes$id %in% df_edges$to[df_edges$from %in% missing_nodes] & (! df_nodes$id %in%  selected_nodes)] <- 0.4
+    df_nodes$hidden <- FALSE
+    df_nodes$hidden[df_nodes$id %in% df_edges$to[grepl("Group:", df_edges$from)]] <- TRUE
   
     return(list(df_edges, df_nodes))
   } else {
@@ -105,13 +114,15 @@ add_attr_network <- function(p, layout = "layout_nicely"){
 }
 
 
-plot_network <- function(df_edges, target_nodes, hide_labels, 
-                         dict.combine, attrs, layout = "layout_nicely"){
+plot_network <- function(draw.data, hide_labels, 
+                         attrs, layout = "layout_nicely"){
+  df_edges = draw.data[[1]]
+  df_nodes = draw.data[[2]]
   if(nrow(df_edges) > 0){
     print(head(df_edges))
-    draw.data = dataNetwork(target_nodes, df_edges, dict.combine, attrs)
-    df_edges = draw.data[[1]]
-    df_nodes = draw.data[[2]]
+    # draw.data = dataNetwork(target_nodes, df_edges, dict.combine, missing_nodes, attrs)
+    # df_edges = draw.data[[1]]
+    # df_nodes = draw.data[[2]]
     print(nrow(df_edges))
     
     if(hide_labels){
