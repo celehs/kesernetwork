@@ -1,13 +1,27 @@
 #' @importFrom visNetwork %>%
 
-dataNetwork <- function(selected_nodes, CosMatrix, dict.combine, attrs){
+dataNetwork <- function(selected_nodes, CosMatrix, dict.combine, phecode, attrs){
 
   attr_edges <- attrs$attr_edges
   attr_nodes_type <- attrs$attr_nodes_type
   attr_nodes_cap <- attrs$attr_nodes_cap
 
   df_edges <- NULL
-  for (i in selected_nodes){
+  
+  missingPhe <- phecode$Phecode[phecode$missing]
+  
+  missing_nodes <- selected_nodes[selected_nodes %in% missingPhe]
+  
+  children <- dict.combine$Variable[gsub("\\..$", "", dict.combine$Variable, perl = TRUE) %in% missing_nodes]
+  children <- children[!children %in% missing_nodes]
+  
+  center_nodes <- c(selected_nodes[!selected_nodes %in% missing_nodes], children)
+  
+  
+  
+  
+  
+  for (i in center_nodes){
     to = getNeighbors(i, CosMatrix)
     cor = switch((i %in% colnames(CosMatrix)) + 1, 
                  CosMatrix[i, to, drop = TRUE], 
@@ -19,6 +33,12 @@ dataNetwork <- function(selected_nodes, CosMatrix, dict.combine, attrs){
     df_edges <- rbind(df_edges, data.frame("from" = i,
                                            "to" = to,
                                            "corvalue" = cor))
+  }
+  
+  if(length(missing_nodes) > 0){
+    df_edges <- rbind(df_edges, data.frame(from = gsub("\\..$", "", children, perl = TRUE),
+                                           to = children,
+                                           corvalue = 1))
   }
   
   if(!is.null(df_edges)){
@@ -33,8 +53,8 @@ dataNetwork <- function(selected_nodes, CosMatrix, dict.combine, attrs){
   df_edges$length <- abs(df_edges$corvalue)^(-1.1)*10
   df_edges$title <- paste0(df_edges$from,"<b> &rarr; </b>", df_edges$to)
   df_edges$edgetype <- "target-other"
-  df_edges$edgetype[df_edges$from %in% selected_nodes &
-                      df_edges$to %in% selected_nodes ] <- "target-target"
+  df_edges$edgetype[df_edges$from %in% c(selected_nodes, center_nodes) &
+                      df_edges$to %in% c(selected_nodes, center_nodes) ] <- "target-target"
 
 
   df_edges <- left_join(df_edges, attr_edges, by = "edgetype")
@@ -51,6 +71,7 @@ dataNetwork <- function(selected_nodes, CosMatrix, dict.combine, attrs){
 
   df_nodes$shape <- "box"
   df_nodes$shape[df_nodes$id %in% colnames(CosMatrix)] <- "ellipse"
+  df_nodes$shape[df_nodes$nodetype == "target"] <- "star"
 
   df_nodes$title = paste0("<b>ID: </b>",df_nodes$id,
                           "<br><b>Description: </b>",dict.combine$Description[match(df_nodes$id,dict.combine$Variable)],
@@ -71,6 +92,9 @@ dataNetwork <- function(selected_nodes, CosMatrix, dict.combine, attrs){
   df_nodes$select_group[df_nodes$id %in% selected_nodes] = paste0(unique(df_nodes$Cap_label), collapse = ',')
 
   df_nodes$font.background[is.na(df_nodes$font.background)] <- ""
+  
+  df_nodes$color.border[df_nodes$id %in% missing_nodes] <- "red"
+  df_nodes$opacity[df_nodes$id %in% df_edges$to[df_edges$from %in% missing_nodes] & (! df_nodes$id %in%  selected_nodes)] <- 0.4
 
   df_groups = df_nodes[, c("group", "color.background")]
   df_groups <- df_groups[!duplicated(df_groups),]
@@ -105,9 +129,10 @@ widget_network <- function(draw.data, hide_label, attrs, CosMatrix, layout = "la
   df_nodes = draw.data[[2]]
   df_groups = draw.data[[3]]
   if(nrow(df_edges) > 0){
+    df_nodes$font.color[df_nodes$nodetype == "target"] <- "white"
     if(hide_label){
-      df_nodes$label <- "        "
-      df_nodes$font.size[df_nodes$nodetype == "target"] <- 40
+      df_nodes$label[df_nodes$nodetype == "other"] <- "        "
+      df_nodes$font.size[df_nodes$nodetype == "target"] <- 50
       df_nodes$font.size[df_nodes$nodetype == "other"] <- 30
       df_nodes$font.background <- NA
       attrs$legend_groups$size[1:7] <- 10

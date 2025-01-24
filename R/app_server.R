@@ -126,7 +126,8 @@ app_server <- function(Rdata_path, Uniq_id, url_va, url_phe){
     # DT input table ====
     
     df_input <- reactive({
-      ids <- unique(colnames(CosMatrix()),rownames(CosMatrix()))
+      # ids <- unique(colnames(CosMatrix()),rownames(CosMatrix()))
+      ids <- unique(c(colnames(CosMatrix()), rownames(CosMatrix()), phecode$Phecode[phecode$missing]))
       ord <- gsub("\\:.+", "", ids, perl = TRUE)
       ord <- factor(ord, levels = c("PheCode", "RXNORM", "ProcedureCode", "LOINC", "ShortName", "Other lab"))
       df <- data.frame(
@@ -183,12 +184,12 @@ app_server <- function(Rdata_path, Uniq_id, url_va, url_phe){
     
     # sidebar ====
     
-    observeEvent(input$inCheckboxGroup2, {
-      updateCheckboxInput(
-        inputId = "hide_labels",
-        value = ifelse(length(input$inCheckboxGroup2) < 3, FALSE, TRUE)
-      )
-    })
+    # observeEvent(input$inCheckboxGroup2, {
+    #   updateCheckboxInput(
+    #     inputId = "hide_labels",
+    #     value = ifelse(length(input$inCheckboxGroup2) < 3, FALSE, TRUE)
+    #   )
+    # })
     
     observeEvent(input$goButton, {
       if (length(selected_nodes()) >= 10) {
@@ -227,14 +228,14 @@ app_server <- function(Rdata_path, Uniq_id, url_va, url_phe){
     draw.data <- eventReactive(selected_nodes(), {
       if (length(selected_nodes()) != 0) {
         input.correct <- selected_nodes()[1:min(50, length(selected_nodes()))]
-        dataNetwork(input.correct, CosMatrix(), dict.combine, attrs)
+        dataNetwork(input.correct, CosMatrix(), dict.combine, phecode, attrs)
       } else {
         NA
       }
     })
     
     network.widget <- reactive({
-      widget_network(draw.data(), input$hide_labels, attrs, CosMatrix(), layout = "layout_nicely" )
+      widget_network(draw.data(), hide_labels(), attrs, CosMatrix(), layout = "layout_nicely" )
     })
     
     
