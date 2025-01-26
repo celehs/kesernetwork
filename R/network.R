@@ -13,7 +13,7 @@ dataNetwork <- function(selected_nodes, CosMatrix, dict.combine, phecode, attrs)
   missing_nodes <- selected_nodes[selected_nodes %in% missingPhe]
   
   
-  ids <- c(colnames(CosMatrix), rownames(CosMatrix))
+  ids <- unique(c(colnames(CosMatrix), rownames(CosMatrix)))
   
   
   children <- ids[gsub("\\..$", "", ids, perl = TRUE) %in% missing_nodes]

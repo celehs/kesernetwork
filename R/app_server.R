@@ -294,7 +294,7 @@ app_server <- function(Rdata_path, Uniq_id, url_va, url_phe){
     
     children <- reactive({
       req(node_id())
-      ids <- c(colnames(CosMatrix()), rownames(CosMatrix()))
+      ids <- unique(c(colnames(CosMatrix()), rownames(CosMatrix())))
       ids[grepl(paste0(node_id(), "\\.\\d$"), ids)]
     })
     
