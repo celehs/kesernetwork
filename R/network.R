@@ -12,7 +12,11 @@ dataNetwork <- function(selected_nodes, CosMatrix, dict.combine, phecode, attrs)
   
   missing_nodes <- selected_nodes[selected_nodes %in% missingPhe]
   
-  children <- dict.combine$Variable[gsub("\\..$", "", dict.combine$Variable, perl = TRUE) %in% missing_nodes]
+  
+  ids <- c(colnames(CosMatrix), rownames(CosMatrix))
+  
+  
+  children <- ids[gsub("\\..$", "", ids, perl = TRUE) %in% missing_nodes]
   children <- children[!children %in% missing_nodes]
   
   center_nodes <- c(selected_nodes[!selected_nodes %in% missing_nodes], children)

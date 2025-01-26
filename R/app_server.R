@@ -292,42 +292,89 @@ app_server <- function(Rdata_path, Uniq_id, url_va, url_phe){
                 })
     })
     
-    
+    children <- reactive({
+      req(node_id())
+      ids <- c(colnames(CosMatrix()), rownames(CosMatrix()))
+      ids[grepl(paste0(node_id(), "\\.\\d$"), ids)]
+    })
     
     # sunburst ====
     output$sun_ui <- renderUI({
-      shinycssloaders::withSpinner(
-        plotly::plotlyOutput("sun",
-                     width = "auto",
-                     height = paste0(input$scale_sungh, "px")
+      
+      if(node_id() %in% phecode$Phecode[phecode$missing]){
+        tagList(radioButtons("sun_child", "Children PheCode:", 
+                             choiceNames = paste("[", children(), "]", dict.combine$Description[match(children(), dict.combine$Variable)]), 
+                             choiceValues = children(), 
+                             selected = children()[1],
+                             width = "100%"),
+                shinycssloaders::withSpinner(
+                  plotly::plotlyOutput("sun",
+                               width = "auto",
+                               height = paste0(input$scale_sungh, "px")
+                  )
+                  , type = 6
+                ))
+      } else {
+        shinycssloaders::withSpinner(
+          plotly::plotlyOutput("sun",
+                               width = "auto",
+                               height = paste0(input$scale_sungh, "px")
+          )
+          , type = 6
         )
-        , type = 6
-      )
+      }
     })
     
     output$sun <- plotly::renderPlotly({
+      
+      if(node_id() %in% phecode$Phecode[phecode$missing] & isTruthy(input$sun_child)){
+        child <- input$sun_child
+      } else {
+        child <- node_id()
+      }
+      
       changeline <- input$changeline
       rotatelabel <- input$rotatelabel
       scale_sungh <- input$scale_sungh
       sunburstPlot(
         thr_cos = 0.01,
         changeline, rotatelabel, scale_sungh,
-        node_id(), CosMatrix(), dict.combine, attrs$cap_color
+        child, CosMatrix(), dict.combine, attrs$cap_color
       )
     })
     
     # circular plot ====
     output$circularplot <- renderUI({
-      div(plotOutput("circular",
-                     width = "100%",
-                     height = "700px"
-      ), align = "center")
+      if(node_id() %in% phecode$Phecode[phecode$missing]){
+        tagList(radioButtons("circu_child", "Children PheCode:", 
+                             choiceNames = paste("[", children(), "]", dict.combine$Description[match(children(), dict.combine$Variable)]), 
+                             choiceValues = children(), 
+                             selected = children()[1],
+                             width = "100%"),
+                div(plotOutput("circular",
+                               width = "100%",
+                               height = "700px"
+                ), align = "center")
+                )
+      } else {
+        div(plotOutput("circular",
+                       width = "100%",
+                       height = "700px"
+        ), align = "center")
+      }
     })
     
+    
+    
     output$circular <- renderPlot({
+      if(node_id() %in% phecode$Phecode[phecode$missing] & isTruthy(input$circu_child)){
+        child <- input$circu_child
+      } else {
+        child <- node_id()
+      }
       circularBar(
         thr_cos_pop = 0.01,
-        node_id(), CosMatrix(), dict.combine, attrs
+        child, CosMatrix(), dict.combine, attrs
       )
     })
     
