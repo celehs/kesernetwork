@@ -1,6 +1,6 @@
 #' @importFrom visNetwork %>%
 
-dataNetwork <- function(selected_nodes, CosMatrix, dict.combine, phecode, attrs){
+dataNetwork <- function(selected_nodes, CosMatrix, dict.combine, phecode, start1, attrs){
 
   attr_edges <- attrs$attr_edges
   attr_nodes_type <- attrs$attr_nodes_type
@@ -17,12 +17,12 @@ dataNetwork <- function(selected_nodes, CosMatrix, dict.combine, phecode, attrs)
   
   
   children <- ids[gsub("\\..$", "", ids, perl = TRUE) %in% missing_nodes]
-  children <- children[!children %in% missing_nodes]
+  children <- children[!children %in% c(missing_nodes, paste0("PheCode:", start1))]
   
   center_nodes <- c(selected_nodes[!selected_nodes %in% missing_nodes], children)
   
   
-  
+  if(length(center_nodes) > 0){
   
   
   for (i in center_nodes){
@@ -104,6 +104,7 @@ dataNetwork <- function(selected_nodes, CosMatrix, dict.combine, phecode, attrs)
   df_groups <- df_groups[!duplicated(df_groups),]
 
   return(list(df_edges, df_nodes, df_groups))
+  }
   } else {
     return(list(data.frame(), data.frame(), data.frame()))
   }

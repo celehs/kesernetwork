@@ -95,10 +95,10 @@ sunburstPlot <- function(thr_cos,
     
     rhd <- rhd[rhd$corvalue > thr_cos, ]
     
+    if(isTruthy(rhd) && nrow(rhd)>0){
     rhd <- left_join(rhd, dict.combine[, c("Variable","Capinfo","index01","index1","index2","index3","index4")],
                      by = c("id" = "Variable"))
     
-    if(nrow(rhd)>0){
       rhd = rhd[order(rhd$index01,rhd$index1,rhd$index2,
                       rhd$index3,rhd$index4,rhd$corvalue),]
       DF = rhd[,-c(1,3)]

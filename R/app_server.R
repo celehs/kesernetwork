@@ -140,6 +140,7 @@ app_server <- function(Rdata_path, Uniq_id, url_va, url_phe){
       df$istarget[df$nodeID %in% colnames(CosMatrix())] <- "target"
       df <- df[with(df, order(type, id)), ]
       df <- df[with(df, order(istarget, decreasing = TRUE)), ]
+      df
     })
     
     output$ui_table <- renderUI({
@@ -228,7 +229,7 @@ app_server <- function(Rdata_path, Uniq_id, url_va, url_phe){
     draw.data <- eventReactive(selected_nodes(), {
       if (length(selected_nodes()) != 0) {
         input.correct <- selected_nodes()[1:min(50, length(selected_nodes()))]
-        dataNetwork(input.correct, CosMatrix(), dict.combine, phecode, attrs)
+        dataNetwork(input.correct, CosMatrix(), dict.combine, phecode, start1, attrs)
       } else {
         NA
       }
@@ -295,7 +296,7 @@ app_server <- function(Rdata_path, Uniq_id, url_va, url_phe){
     children <- reactive({
       req(node_id())
       ids <- unique(c(colnames(CosMatrix()), rownames(CosMatrix())))
-      ids[grepl(paste0(node_id(), "\\.\\d$"), ids)]
+      setdiff(ids[grepl(paste0(node_id(), "\\.\\d$"), ids)], paste0("PheCode:", start1))
     })
     
     # sunburst ====
@@ -326,8 +327,8 @@ app_server <- function(Rdata_path, Uniq_id, url_va, url_phe){
     })
     
     output$sun <- plotly::renderPlotly({
-      
-      if(node_id() %in% phecode$Phecode[phecode$missing] & isTruthy(input$sun_child)){
+      if(node_id() %in% phecode$Phecode[phecode$missing]){
+        req(input$sun_child)
         child <- input$sun_child
       } else {
         child <- node_id()
@@ -367,7 +368,8 @@ app_server <- function(Rdata_path, Uniq_id, url_va, url_phe){
     
     
     output$circular <- renderPlot({
-      if(node_id() %in% phecode$Phecode[phecode$missing] & isTruthy(input$circu_child)){
+      if(node_id() %in% phecode$Phecode[phecode$missing]){
+        req(input$circu_child)
         child <- input$circu_child
       } else {
         child <- node_id()
