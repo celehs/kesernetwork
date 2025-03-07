@@ -16,6 +16,8 @@ This tool allows the user to infer relatedness among diseases, treatment, proced
 
 - all potential target PheCodes and RxNorm codes connected with non-target nodes (e.g. Procedures or Lab codes) of interest
 
+**Note**: PheCodes with low frequency are excluded in the current KESER network. Only codes occurring more than 1,000 times at MGB and more than 5,000 times at VA have been kept. The different thresholds were used because VA has a larger population and larger number of codes than MGB.
+
 For PheCodes, LOINC codes and Procedures, see more information at 
 
 - **PheCode Hierarcy:** 
@@ -34,6 +36,7 @@ For PheCodes, LOINC codes and Procedures, see more information at
 - **Procedure codes:** A unique ID is assigned to each of the procedure category.
 
 The maximum number of target nodes (as input) is set to 50. For clarity of the network, it is recommended to use less than 10 target nodes.
+
 
 
 ### References
