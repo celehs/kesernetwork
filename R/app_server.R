@@ -486,8 +486,8 @@ app_server <- function(Rdata_path, Uniq_id, url_va, url_phe){
       cap <- dict.combine$Capinfo[dict.combine$Variable == node_id()]
       href = switch(match(cap, c("ProcedureCode", "Lab", "PheCode", "RXNORM")), 
                     "https://hcup-us.ahrq.gov/toolssoftware/ccs_svcsproc/ccssvcproc.jsp",
-                    "https://loinc.org/multiaxial-hierarchy/",
-                    "https://phewascatalog.org/phecodes_icd10cm",
+                    "https://loinc.org/component-hierarchy-by-system/",
+                    "https://phewascatalog.org/phewas/#phe12",
                     "https://mor.nlm.nih.gov/RxNav/")
       output$ui_moreinfo <- renderUI({
         div(actionButton("infoButton",

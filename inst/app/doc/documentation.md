@@ -20,16 +20,14 @@ This tool allows the user to infer relatedness among diseases, treatment, proced
 
 For PheCodes, LOINC codes and Procedures, see more information at 
 
-- **PheCode Hierarcy:** 
-  * ICD9: https://phewascatalog.org/phecodes
-  * ICD10-CM: https://phewascatalog.org/phecodes_icd10cm
+- **PheCode Hierarcy:** https://phewascatalog.org/phewas/#phe12
   <br>
 
 - **RxNorm Hierarchy:** https://mor.nlm.nih.gov/RxNav/
   * RxNorm disclaimer: This product uses publicly available data courtesy of the U.S. National Library of Medicine (NLM), National Institutes of Health, Department of Health and Human Services; NLM is not responsible for the product and does not endorse or recommend this or any other product.
   <br>
 
-- **LOINC Hierarchy:** https://loinc.org/multiaxial-hierarchy/ 
+- **LOINC Hierarchy:** https://loinc.org/component-hierarchy-by-system/ 
   * LOINC disclaimer: This material contains content from LOINC (http://loinc.org). LOINC is copyright © 1995-2023, Regenstrief Institute, Inc. and the Logical Observation Identifiers Names and Codes (LOINC) Committee and is available at no cost under the license at http://loinc.org/license. LOINC® is a registered United States trademark of Regenstrief Institute, Inc.
   <br>
 
