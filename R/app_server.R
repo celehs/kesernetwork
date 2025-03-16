@@ -236,7 +236,8 @@ app_server <- function(Rdata_path, Uniq_id, url_va, url_phe){
     })
     
     network.widget <- reactive({
-      widget_network(draw.data(), hide_labels(), attrs, CosMatrix(), layout = "layout_nicely" )
+      layout = ifelse(nrow(draw.data()[[2]]) > 1000, 'layout_with_kk', 'layout_with_fr')
+      widget_network(draw.data(), hide_labels(), attrs, CosMatrix(), layout = layout )
     })
     
     

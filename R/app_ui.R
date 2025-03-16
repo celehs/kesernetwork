@@ -94,7 +94,13 @@ app_ui <- function(request) {
             class = "btn-success"
           ), align = "left")
         )
-      ), id = "btns")
+      ), id = "btns")#,
+      # radioButtons('layout', "Layout", 
+      #              choices = c("layout_with_kk", "layout_with_fr", 
+      #                          "layout_with_lgl", "layout_with_dh", 
+      #                          "layout_with_gem", "layout_with_graphopt", 
+      #                          "layout_with_mds", "layout_with_sugiyama"),
+      #              selected = "layout_with_fr")
     ),
     shinydashboard::dashboardBody(
       windowSizeUI("win"),
